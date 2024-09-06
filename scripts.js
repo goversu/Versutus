@@ -870,8 +870,23 @@ I guess we're still a team`
     const songTitle = document.getElementById('song-title');
     const lyrics = document.getElementById('lyrics');
     const songButtons = Array.from(document.querySelectorAll('.song-button'));
+    const emailButton = document.getElementById('email-button');
     
     let currentSongIndex = -1;
+
+    function copyEmail() {
+        const email = emailButton.textContent;
+        navigator.clipboard.writeText(email).then(() => {
+            emailButton.textContent = 'copied!';
+            setTimeout(() => {
+                emailButton.textContent = 'versutus0@gmail.com'; // Reset button text after 0.5s
+            }, 500);
+        }).catch(err => {
+            console.error('Failed to copy email: ', err);
+        });
+    }
+
+    emailButton.addEventListener('click', copyEmail);
 
     function showLyrics(index) {
         if (index >= 0 && index < songButtons.length) {
@@ -899,7 +914,7 @@ I guess we're still a team`
             copyButton.textContent = 'copied!';  // Change button text to "copied!"
             setTimeout(() => {
                 copyButton.textContent = 'copy [c]';
-            }, 1000);
+            }, 500);
         }).catch(err => {
             console.error('Failed to copy text: ', err);
         });
