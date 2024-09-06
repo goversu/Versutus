@@ -1,0 +1,209 @@
+body {
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    color: #e0e0e0;
+    text-transform: lowercase;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    background-color: #1e1e1e;
+    padding: 10px 0;
+    border-bottom: 1px solid #333;
+    width: 100%;
+}
+
+nav {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding-right: 20px;
+}
+
+nav a,
+nav button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    white-space: nowrap; /* Prevents text from wrapping */
+}
+
+nav a:hover,
+nav button:hover {
+    background-color: #333;
+}
+
+.container {
+    padding: 20px;
+    max-width: 800px; /* Adjust this value as needed */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+h2 {
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+
+.profile-links {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.profile-links {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 0px;
+}
+
+.profile-links a,
+.profile-links button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.profile-links a:hover,
+.profile-links button:hover {
+    background-color: #333;
+}
+
+/* Specific styles for the email button */
+.email-button {
+    width: 200px; /* Set a fixed width to ensure consistency */
+}
+
+.email-button {
+    cursor: pointer;
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Handle overflow text */
+}
+
+#song-list ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping if there are too many buttons to fit in one row */
+    gap: 10px; /* Add space between buttons */
+}
+
+#song-list li {
+    margin: 0;
+}
+
+.song-button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 5px; /* Space around each button */
+}
+
+.song-button:hover {
+    background-color: #333;
+}
+
+.song-button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
+.song-button:hover {
+    background-color: #333;
+}
+
+#lyrics-container {
+    margin-top: 20px;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 20px; /* Adds space between the buttons */
+    margin-bottom: 20px;
+}
+
+.nav-buttons button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.nav-buttons button:hover {
+    background-color: #333;
+}
+
+#back-button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+#back-button:hover {
+    background-color: #333;
+}
+
+pre {
+    white-space: pre-wrap; /* Preserves formatting */
+    font-size: 18px; /* Adjust this value to make the text larger or smaller */
+    line-height: 1.6; /* Adjusts line spacing for readability */
+    color: #e0e0e0; /* Optional: Keep the text color consistent with the theme */
+    font-family: 'Courier New', Courier, monospace; /* Ensures the font matches the rest of the site */
+    padding: 0px; /* Adds padding around the text for better spacing */
+}
+
+footer {
+    background-color: #1e1e1e;
+    padding: 10px;
+    text-align: center;
+    border-top: 1px solid #333;
+    width: 100%;
+}
