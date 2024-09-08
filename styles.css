@@ -63,13 +63,6 @@ h2 {
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-top: 20px;
-}
-
-.profile-links {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
     margin-top: 0px;
 }
 
@@ -87,8 +80,23 @@ h2 {
     border-radius: 5px;
 }
 
+.download-links a {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
 .profile-links a:hover,
-.profile-links button:hover {
+.profile-links button:hover,
+.download-links a:hover
+{
     background-color: #333;
 }
 
@@ -115,6 +123,10 @@ h2 {
 #song-list li {
     margin: 0;
 }
+
+#linklist {margin: 0;}
+
+#linklist a {padding: 50px;}
 
 .song-button {
     background-color: black;
