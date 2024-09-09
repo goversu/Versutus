@@ -9,7 +9,7 @@ body {
     align-items: center;
 }
 
-header {
+header { overflow:auto;
     background-color: #1e1e1e;
     padding: 10px 0;
     border-bottom: 1px solid #333;
@@ -44,11 +44,14 @@ nav button:hover {
 }
 
 .container {
+	position:relative;
     padding: 20px;
     max-width: 800px; /* Adjust this value as needed */
     width: 100%;
     box-sizing: border-box;
 }
+
+.container p {line-height:1.5;font-family:arial;}
 
 section {
     margin-bottom: 20px;
@@ -211,10 +214,29 @@ pre {
     padding: 0px; /* Adds padding around the text for better spacing */
 }
 
-footer {
+footer {overflow:auto;
     background-color: #1e1e1e;
     padding: 10px;
     text-align: center;
     border-top: 1px solid #333;
     width: 100%;
 }
+
+.download-links .donate {
+	position:absolute;bottom:20px;right:20px;
+    color: skyblue;
+    border: 1px solid white;
+    padding: 5px 10px;
+	margin-left: 0px;
+}
+
+.download-links .termsofuse {
+    color: lightgreen;
+    border: 1px solid white;
+    padding: 5px 10px;
+	margin-left: 0px;
+}
+
+.download-links .termsofuse:hover {backgroundcolor:#333}
+
+.download-links
