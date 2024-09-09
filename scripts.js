@@ -861,116 +861,112 @@ Although we aren't so super
 I guess we're still a team`
 };
 
-    const songList = document.getElementById('song-list');
-    const lyricsContainer = document.getElementById('lyrics-container');
-    const homeButton = document.getElementById('home-button');
-    const prevButton = document.getElementById('prev-button');
-    const nextButton = document.getElementById('next-button');
-    const copyButton = document.getElementById('copy-button');
-    const songTitle = document.getElementById('song-title');
-    const lyrics = document.getElementById('lyrics');
-    const songButtons = Array.from(document.querySelectorAll('.song-button'));
-    const emailButton = document.getElementById('email-button');
-    
-    let currentSongIndex = -1;
+const songList = document.getElementById('song-list');
+const lyricsContainer = document.getElementById('lyrics-container');
+const homeButton = document.getElementById('home-button');
+const prevButton = document.getElementById('prev-button');
+const nextButton = document.getElementById('next-button');
+const copyButton = document.getElementById('copy-button');
+const songTitle = document.getElementById('song-title');
+const lyrics = document.getElementById('lyrics');
+const songButtons = Array.from(document.querySelectorAll('.song-button'));
+const emailButton = document.getElementById('email-button');
 
-    function copyEmail() {
-        const email = emailButton.textContent;
-        navigator.clipboard.writeText(email).then(() => {
-            emailButton.textContent = 'copied!';
-            setTimeout(() => {
-                emailButton.textContent = 'versutus0@gmail.com'; // Reset button text after 0.5s
-            }, 500);
-        }).catch(err => {
-            console.error('Failed to copy email: ', err);
-        });
-    }
+let currentSongIndex = -1;
 
-    emailButton.addEventListener('click', copyEmail);
-
-    function showLyrics(index) {
-        if (index >= 0 && index < songButtons.length) {
-            const songButton = songButtons[index];
-            const songId = songButton.getAttribute('data-lyrics');
-            songTitle.textContent = songButton.textContent;
-            lyrics.textContent = lyricsData[songId];
-            songList.style.display = 'none';
-            lyricsContainer.style.display = 'block';
-            currentSongIndex = index;
-        }
-    }
-
-    function getNextIndex() {
-        return (currentSongIndex + 1) % songButtons.length;
-    }
-
-    function getPrevIndex() {
-        return (currentSongIndex - 1 + songButtons.length) % songButtons.length;
-    }
-
-    function copyLyrics() {
-        const lyricsText = lyrics.textContent;
-        navigator.clipboard.writeText(lyricsText).then(() => {
-            copyButton.textContent = 'copied!';  // Change button text to "copied!"
-            setTimeout(() => {
-                copyButton.textContent = 'copy [c]';
-            }, 500);
-        }).catch(err => {
-            console.error('Failed to copy text: ', err);
-        });
-    }
-
-    songList.addEventListener('click', (event) => {
-        if (event.target.classList.contains('song-button')) {
-            const index = songButtons.indexOf(event.target);
-            showLyrics(index);
-        }
+function copyEmail() {
+    const email = emailButton.textContent;
+    navigator.clipboard.writeText(email).then(() => {
+        emailButton.textContent = 'copied!';
+        setTimeout(() => {
+            emailButton.textContent = 'versutus0@gmail.com';
+        }, 500);
+    }).catch(err => {
+        console.error('Failed to copy email: ', err);
     });
+}
 
-    homeButton.addEventListener('click', () => {
+emailButton.addEventListener('click', copyEmail);
+
+function showLyrics(index) {
+    if (index >= 0 && index < songButtons.length) {
+        const songButton = songButtons[index];
+        const songId = songButton.getAttribute('data-lyrics');
+        songTitle.textContent = songButton.textContent;
+        lyrics.textContent = lyricsData[songId];
+        songList.style.display = 'none';
+        lyricsContainer.style.display = 'block';
+        currentSongIndex = index;
+    }
+}
+
+function getNextIndex() {
+    return (currentSongIndex + 1) % songButtons.length;
+}
+
+function getPrevIndex() {
+    return (currentSongIndex - 1 + songButtons.length) % songButtons.length;
+}
+
+function copyLyrics() {
+    const lyricsText = lyrics.textContent;
+    navigator.clipboard.writeText(lyricsText).then(() => {
+        copyButton.textContent = 'copied!';
+        setTimeout(() => {
+            copyButton.textContent = 'copy [c]';
+        }, 500);
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
+}
+
+songList.addEventListener('click', (event) => {
+    if (event.target.classList.contains('song-button')) {
+        const index = songButtons.indexOf(event.target);
+        showLyrics(index);
+    }
+});
+
+homeButton.addEventListener('click', () => {
+    lyricsContainer.style.display = 'none';
+    songList.style.display = 'block';
+});
+
+prevButton.addEventListener('click', () => {
+    if (currentSongIndex === -1) {
+        showLyrics(songButtons.length - 1);
+    } else {
+        showLyrics(getPrevIndex());
+    }
+});
+
+nextButton.addEventListener('click', () => {
+    if (currentSongIndex === -1) {
+        showLyrics(0);
+    } else {
+        showLyrics(getNextIndex());
+    }
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'a') {
         lyricsContainer.style.display = 'none';
         songList.style.display = 'block';
-    });
-
-    homeButton.addEventListener('click', () => {
-        lyricsContainer.style.display = 'none';
-        songList.style.display = 'block';
-    });
-
-    prevButton.addEventListener('click', () => {
+    } else if (event.key === 's') {
         if (currentSongIndex === -1) {
             showLyrics(songButtons.length - 1);
         } else {
             showLyrics(getPrevIndex());
         }
-    });
-
-    nextButton.addEventListener('click', () => {
+    } else if (event.key === 'd') {
         if (currentSongIndex === -1) {
             showLyrics(0);
         } else {
             showLyrics(getNextIndex());
         }
-    });
+    } else if (event.key === 'c') {
+        copyLyrics();
+    }
+});
 
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'a') {
-            lyricsContainer.style.display = 'none';
-            songList.style.display = 'block';
-        } else if (event.key === 's') {
-            if (currentSongIndex === -1) {
-                showLyrics(songButtons.length - 1);
-            } else {
-                showLyrics(getPrevIndex());
-            }
-        } else if (event.key === 'd') {
-            if (currentSongIndex === -1) {
-                showLyrics(0);
-            } else {
-                showLyrics(getNextIndex());
-            }
-        } else if (event.key === 'c') {
-            copyLyrics();
-        }
-    });
 });
