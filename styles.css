@@ -29,7 +29,7 @@ header {
 nav {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* Center items in the navigation */
+    justify-content: right; /* Center items in the navigation */
     gap: 10px;
     padding: 0;
 }
@@ -201,7 +201,7 @@ footer {
 .profile-links {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* Center items in the footer */
+    justify-content: left; /* Center items in the footer */
     gap: 10px;
 }
 
