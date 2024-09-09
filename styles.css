@@ -250,6 +250,6 @@ footer {
     padding: 10px 20px;
 }
 
-.download-links .termsofuse:hover {
+.download-links .termsofuse:hover, .download-links .donate:hover {
     background-color: #333;
 }
