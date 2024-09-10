@@ -380,7 +380,7 @@ But give me more
 I'll do my teachers justice when i show them all
 I'm better than
 I was before; and
-It's sweeter than a brownie with a caramel core (senpai!) (endless smile the whole sentence into completely dry on mel core from cara)
+It's sweeter than a brownie with a caramel core
 Do re mi fa so
 I just lost to mipha so
 Imma keep my eye on grey skies just hoping for a miracle
@@ -409,7 +409,7 @@ Pass this dungeon over pass through time and do it like a zombie
 Tell me sirius black
 Am i the best of plebs
 Not to say i harbour any doubts but I'm scared-
-(so shout with me)
+so shout with me
 Oh! it's nifu- it's nifu;
 It feels like i'm in love for the first time
 Oh! it's nifu- it's nifu;
