@@ -1,5 +1,6 @@
 body {
     font-family: 'Courier New', Courier, monospace;
+    font-size: 16px;
     margin: 0;
     padding: 0;
     background-color: #121212;
@@ -46,7 +47,7 @@ nav button {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 14px;
+    font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
     white-space: nowrap;
@@ -77,6 +78,7 @@ section {
 h2 {
     border-bottom: 1px solid #333;
     padding-bottom: 10px;
+    font-size: 1.8em;
 }
 
 .download-links a {
@@ -87,7 +89,7 @@ h2 {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 14px;
+    font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
 }
@@ -100,7 +102,7 @@ h2 {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 14px;
+    font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
     white-space: nowrap;
@@ -115,7 +117,7 @@ h2 {
 }
 
 .price-container {
-    font-size: 48px;
+    font-size: 56px;
     font-weight: bold;
     color: skyblue;
     margin: 10px 0;
@@ -126,7 +128,7 @@ h2 {
 }
 
 .calculator-section h3 {
-    font-size: 16px;
+    font-size: 18px;
     margin-bottom: 15px;
     opacity: 0.8;
 }
@@ -148,7 +150,7 @@ h2 {
     cursor: pointer;
     transition: all 0.2s;
     user-select: none;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .bubble.active {
@@ -163,7 +165,7 @@ h2 {
     padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px;
     margin: 0 5px;
     transition: background-color 0.2s;
 }
@@ -183,7 +185,7 @@ h2 {
 .slider-container label {
     display: block;
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .slider-container input[type="range"] {
@@ -194,14 +196,14 @@ h2 {
 .slider-container span {
     display: block;
     text-align: right;
-    font-size: 14px;
+    font-size: 16px;
     color: skyblue;
 }
 
 .calculator-footer {
     text-align: left;
     margin-top: 40px;
-    font-size: 12px;
+    font-size: 14px;
     opacity: 0.7;
     line-height: 1.6;
 }
@@ -211,7 +213,7 @@ h2 {
     display: inline-flex;
     align-items: center;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     user-select: none;
     gap: 10px;
 }
@@ -236,7 +238,7 @@ h2 {
     height: 18px;
     border: 1px solid #777;
     border-radius: 50%;
-    font-size: 12px;
+    font-size: 14px;
     color: #999;
     margin-left: 5px;
     cursor: help;
@@ -258,7 +260,7 @@ h2 {
     opacity: 0;
     transition: opacity 0.3s;
     border: 1px solid #333;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.4;
     pointer-events: none;
 }
@@ -275,7 +277,7 @@ h2 {
     border: 1px solid #444;
     padding: 5px;
     font-family: 'Courier New', Courier, monospace;
-    font-size: 12px;
+    font-size: 14px;
     outline: none;
     margin-left: 10px;
     border-radius: 3px;
@@ -326,7 +328,7 @@ footer {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 14px;
+    font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
     white-space: nowrap;
