@@ -1,5 +1,5 @@
 @echo off
-SET REPO_URL=https://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@github.com/goversu/Versutus.git
+SET REPO_URL=https://github.com/goversu/Versutus.git
 SET BRANCH=main
 
 echo Adding changes...
