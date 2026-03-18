@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
             'intro-wonderstruck': 'wonderstruck',
             'intro-musician': 'musician',
             'intro-portfolio': 'portfolio manager',
+            'intro-engineer': 'engineer',
+            'intro-entrepreneur': 'entrepreneur',
             'calc-title': 'estimated price',
             'calc-unit': 'SGD',
             'bubble-melody': 'melody',
@@ -19,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'bulk-full-stack': 'full stack',
             'bulk-full-mix': 'full mix',
             'label-length': 'song length',
-            'label-instr': 'number of instrumental tracks',
+            'label-instr': 'number of main instrumental tracks',
             'label-vocals': 'number of vocal tracks',
             'calc-footer': 'the price quoted above is an estimate. please contact versutus0@gmail.com with project details and files to order',
             'terms-back': 'back',
@@ -33,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'no-downloads': 'no downloads for now',
             'terms-link': 'terms of use',
             'label-associate': 'associate pricing',
-            'tooltip-associate': 'referred by existing associate or from second project onwards: 20% off all, 50% off 15s short covers'
+            'tooltip-associate': 'referred by existing associate or from second project onwards: 80% discount'
         },
         'zh-Hans': {
             'nav-home': 'versutus',
@@ -42,6 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
             'intro-wonderstruck': 'wonderstruck',
             'intro-musician': '音乐人',
             'intro-portfolio': '投资经理',
+            'intro-engineer': '工程师',
+            'intro-entrepreneur': '创业者',
             'calc-title': '预估价格',
             'calc-unit': 'SGD',
             'bubble-melody': '旋律',
@@ -53,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'bulk-full-stack': '全套',
             'bulk-full-mix': '全套混音',
             'label-length': '歌曲长度',
-            'label-instr': '分轨数量',
+            'label-instr': '主分轨数量',
             'label-vocals': '人声轨道数量',
             'calc-footer': '以上报价仅为预估。下单前请将项目详情和文件发送至 versutus0@gmail.com',
             'terms-back': '返回',
@@ -67,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'no-downloads': '目前没有下载',
             'terms-link': '使用条款',
             'label-associate': '伙伴价格',
-            'tooltip-associate': '由现有伙伴推荐，或从第二个项目起：全部8折，15秒短翻唱5折'
+            'tooltip-associate': '由现有伙伴推荐，或从第二个项目起：8折'
         },
         'zh-Hant': {
             'nav-home': 'versutus',
@@ -76,6 +80,8 @@ document.addEventListener('DOMContentLoaded', () => {
             'intro-wonderstruck': 'wonderstruck',
             'intro-musician': '音樂人',
             'intro-portfolio': '投資經理',
+            'intro-engineer': '工程師',
+            'intro-entrepreneur': '創業者',
             'calc-title': '預估價格',
             'calc-unit': 'SGD',
             'bubble-melody': '旋律',
@@ -87,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'bulk-full-stack': '全套',
             'bulk-full-mix': '全套混音',
             'label-length': '歌曲長度',
-            'label-instr': '分軌數量',
+            'label-instr': '主分軌數量',
             'label-vocals': '人聲軌道數量',
             'calc-footer': '以上報價僅為預估。下單前請將項目詳情和文件發送至 versutus0@gmail.com',
             'terms-back': '返回',
@@ -101,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'no-downloads': '目前沒有下載',
             'terms-link': '使用條款',
             'label-associate': '伙伴價格',
-            'tooltip-associate': '由現有夥伴推薦，或從第二個項目起：全部8折，15秒短翻唱5折'
+            'tooltip-associate': '由現有夥伴推薦，或從第二個項目起：8折'
         }
     };
 
@@ -128,16 +134,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     setLanguage(savedLang);
 
-    // Calculator Logic
+    // Calculator Logic, input hours taken for 1 minute of music
     const priceDisplay = document.getElementById('estimated-price');
     if (priceDisplay) {
         const bubbles = {
             melody: { weight: 1, element: document.getElementById('bubble-melody') },
             lyrics: { weight: 2, element: document.getElementById('bubble-lyrics') },
-            production: { weight: 4, element: document.getElementById('bubble-production') },
-            mix: { weight: (v) => 0.25 * v, element: document.getElementById('bubble-mix'), valSource: 'instr-tracks' },
+            production: { weight: (v) => 2 * v, element: document.getElementById('bubble-production'), valSource: 'instr-tracks' },
+            mix: { weight: (v) => 0.5 * v, element: document.getElementById('bubble-mix'), valSource: 'both' },
             vocalEdit: { weight: (v) => 1 * v, element: document.getElementById('bubble-vocal-edit'), valSource: 'vocal-tracks' },
-            versutusVocals: { weight: (v) => 0.5 * v, element: document.getElementById('bubble-versutus-vocals'), valSource: 'vocal-tracks' }
+            versutusVocals: { weight: (v) => 1 * v, element: document.getElementById('bubble-versutus-vocals'), valSource: 'vocal-tracks' }
         };
 
         const sliders = {
@@ -162,7 +168,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (bubbles[key].element.classList.contains('active')) {
                     const w = bubbles[key].weight;
                     if (typeof w === 'function') {
-                        const val = bubbles[key].valSource === 'instr-tracks' ? instrVal : vocalVal;
+                        let val;
+                        if (bubbles[key].valSource === 'both') {
+                            val = instrVal + vocalVal;
+                        } else {
+                            val = bubbles[key].valSource === 'instr-tracks' ? instrVal : vocalVal;
+                        }
                         sumWeights += w(val);
                     } else {
                         sumWeights += w;
@@ -170,26 +181,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            const coefficient = 5000 * sumWeights;
-            let price = Math.sqrt(lengthMinutes * coefficient);
+            const coefficient = 4 * sumWeights;
+            let price = 30 / 2 * Math.pow(lengthMinutes * coefficient, 0.8);
 
             // Associate discounts
             if (bulk.associate.checked) {
-                const isShortCover = parseInt(sliders.length.value) === 15 &&
-                    instrVal === 1 &&
-                    vocalVal === 1 &&
-                    bubbles.mix.element.classList.contains('active') &&
-                    bubbles.vocalEdit.element.classList.contains('active') &&
-                    !bubbles.melody.element.classList.contains('active') &&
-                    !bubbles.lyrics.element.classList.contains('active') &&
-                    !bubbles.production.element.classList.contains('active') &&
-                    !bubbles.versutusVocals.element.classList.contains('active');
-
-                if (isShortCover) {
-                    price *= 0.5; // 50% off for 15s short covers (specific combination)
-                } else {
-                    price *= 0.8; // 20% off all others
-                }
+                price *= 0.8;
             }
 
             priceDisplay.textContent = price.toFixed(2);
@@ -223,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const s = val % 60;
                         label.textContent = `${m}:${s.toString().padStart(2, '0')}${val >= 300 ? '+' : ''}`;
                     } else if (e.target.id === 'instr-tracks') {
-                        label.textContent = `${val}${val >= 50 ? '+' : ''}`;
+                        label.textContent = `${val}${val >= 20 ? '+' : ''}`;
                     } else if (e.target.id === 'vocal-tracks') {
                         label.textContent = `${val}${val >= 20 ? '+' : ''}`;
                     }

@@ -47,7 +47,7 @@ nav button {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
     border-radius: 5px;
     white-space: nowrap;
@@ -69,6 +69,10 @@ nav button:hover {
 .container p {
     line-height: 1.5;
     font-family: 'Courier New', Courier, monospace;
+}
+
+#about p {
+    margin-bottom: 30px;
 }
 
 section {
@@ -102,7 +106,7 @@ h2 {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
     border-radius: 5px;
     white-space: nowrap;
@@ -145,12 +149,13 @@ h2 {
     background-color: transparent;
     color: white;
     border: 1px solid white;
-    padding: 12px 25px;
+    padding: 8px 18px;
     border-radius: 30px;
     cursor: pointer;
     transition: all 0.2s;
     user-select: none;
     font-size: 16px;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .bubble.active {
@@ -166,6 +171,7 @@ h2 {
     border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
+    font-family: 'Courier New', Courier, monospace;
     margin: 0 5px;
     transition: background-color 0.2s;
 }
@@ -277,7 +283,7 @@ h2 {
     border: 1px solid #444;
     padding: 5px;
     font-family: 'Courier New', Courier, monospace;
-    font-size: 14px;
+    font-size: 13px;
     outline: none;
     margin-left: 10px;
     border-radius: 3px;
@@ -328,7 +334,7 @@ footer {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
     border-radius: 5px;
     white-space: nowrap;
