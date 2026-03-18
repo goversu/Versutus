@@ -1,0 +1,366 @@
+body {
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    background-color: #1e1e1e;
+    padding: 10px;
+    border-bottom: 1px solid #333;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+}
+
+.header-container {
+    max-width: 1200px; /* Adjust as needed */
+    width: 100%;
+    padding: 0 10px; /* Padding inside the container */
+    box-sizing: border-box; /* Ensure padding and border are included in width/height calculations */
+}
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Left align items */
+    gap: 10px;
+    padding: 0;
+    max-width: 800px;
+    width: 100%;
+}
+
+/* Navigation links and buttons */
+nav a,
+nav button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+nav a:hover,
+nav button:hover {
+    background-color: #333;
+}
+
+.container {
+    position: relative;
+    padding: 20px;
+    max-width: 800px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.container p {
+    line-height: 1.5;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+h2 {
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+
+.download-links a {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.email-button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Calculator Styles */
+.calculator-header {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.price-container {
+    font-size: 48px;
+    font-weight: bold;
+    color: skyblue;
+    margin: 10px 0;
+}
+
+.calculator-section {
+    margin-bottom: 30px;
+}
+
+.calculator-section h3 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    opacity: 0.8;
+}
+
+.bubble-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+.bubble {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    padding: 12px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+    font-size: 14px;
+}
+
+.bubble.active {
+    background-color: white;
+    color: black;
+}
+
+.bulk-button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    margin: 0 5px;
+    transition: background-color 0.2s;
+}
+
+.bulk-button:hover {
+    background-color: #555;
+}
+
+.calculator-section[style*="text-align: center"] {
+    text-align: left !important;
+}
+
+.slider-container {
+    margin-bottom: 25px;
+}
+
+.slider-container label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.slider-container input[type="range"] {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.slider-container span {
+    display: block;
+    text-align: right;
+    font-size: 14px;
+    color: skyblue;
+}
+
+.calculator-footer {
+    text-align: left;
+    margin-top: 40px;
+    font-size: 12px;
+    opacity: 0.7;
+    line-height: 1.6;
+}
+
+/* Checkbox and Tooltip Styles */
+.checkbox-container {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    user-select: none;
+    gap: 10px;
+}
+
+.checkbox-container input {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: skyblue;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #777;
+    border-radius: 50%;
+    font-size: 12px;
+    color: #999;
+    margin-left: 5px;
+    cursor: help;
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden;
+    width: 220px;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    text-align: center;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -110px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    border: 1px solid #333;
+    font-size: 12px;
+    line-height: 1.4;
+    pointer-events: none;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Language Selector Styles */
+#language-selector {
+    background-color: transparent;
+    color: white;
+    border: 1px solid #444;
+    padding: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    outline: none;
+    margin-left: 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#language-selector option {
+    background-color: #1e1e1e;
+    color: white;
+}
+
+
+footer {
+    background-color: #1e1e1e;
+    padding: 10px;
+    border-top: 1px solid #333;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    text-align: left;
+}
+
+.footer-container {
+    max-width: 1200px; /* Adjust as needed */
+    width: 100%;
+    padding: 0 10px; /* Padding inside the container */
+    box-sizing: border-box; /* Ensure padding and border are included in width/height calculations */
+}
+
+/* Profile links styles */
+.profile-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Left align items */
+    gap: 10px;
+    max-width: 800px;
+    width: 100%;
+}
+
+/* Profile links and buttons */
+.profile-links a,
+.profile-links button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.profile-links a:hover,
+.profile-links button:hover {
+    background-color: #333;
+}
+
+.download-links {
+    display: flex;
+    justify-content: left;
+    gap: 10px;
+    margin-top: 0;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.download-links .donate {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    color: skyblue;
+    border: 1px solid white;
+    padding: 10px 20px;
+}
+
+.download-links .termsofuse {
+    color: lightgreen;
+    border: 1px solid white;
+    padding: 10px 20px;
+}
+
+.download-links .termsofuse:hover, .download-links .donate:hover {
+    background-color: #333;
+}

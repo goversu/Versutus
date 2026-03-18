@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>versutus</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="scripts.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="index.html" data-i18n="nav-home">versutus</a>
+            <a href="commission.html" data-i18n="nav-commission">commission</a>
+            <select id="language-selector">
+                <option value="en">english</option>
+                <option value="zh-Hans">简体中文</option>
+                <option value="zh-Hant">繁體中文</option>
+            </select>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- website user can't see: coefficient represents how many hours it takes to complete each component for a song 1 minute in length -->
+        <div class="calculator-header">
+            <h2 data-i18n="calc-title">estimated price</h2>
+            <div class="price-container">
+                <span id="estimated-price">0.00</span> <small data-i18n="calc-unit">SGD</small>
+            </div>
+        </div>
+
+        <div class="calculator-section">
+            <button id="bulk-full-stack" class="bulk-button" data-i18n="bulk-full-stack">full stack</button>
+            <button id="bulk-full-mix" class="bulk-button" data-i18n="bulk-full-mix">full mix</button>
+        </div>
+
+        <div class="calculator-section">
+            <div class="slider-container">
+                <label for="song-length" data-i18n="label-length">song length</label>
+                <input type="range" id="song-length" min="15" max="300" step="15" value="15">
+                <span>0:15</span>
+            </div>
+            <div class="slider-container">
+                <label for="instr-tracks" data-i18n="label-instr">number of instrumental tracks</label>
+                <input type="range" id="instr-tracks" min="1" max="50" step="1" value="1">
+                <span>1</span>
+            </div>
+            <div class="slider-container">
+                <label for="vocal-tracks" data-i18n="label-vocals">number of vocal tracks</label>
+                <input type="range" id="vocal-tracks" min="1" max="20" step="1" value="1">
+                <span>1</span>
+            </div>
+        </div>
+
+        <div class="calculator-section">
+            <div class="bubble-container">
+                <div id="bubble-melody" class="bubble" data-i18n="bubble-melody">melody</div>
+                <div id="bubble-lyrics" class="bubble" data-i18n="bubble-lyrics">lyrics</div>
+                <div id="bubble-production" class="bubble" data-i18n="bubble-production">production</div>
+                <div id="bubble-mix" class="bubble" data-i18n="bubble-mix">mix</div>
+                <div id="bubble-vocal-edit" class="bubble" data-i18n="bubble-vocal-edit">vocal edit</div>
+                <div id="bubble-versutus-vocals" class="bubble" data-i18n="bubble-versutus-vocals">versutus vocals</div>
+            </div>
+        </div>
+
+        <div class="calculator-section">
+            <label class="checkbox-container">
+                <input type="checkbox" id="associate-pricing">
+                <span data-i18n="label-associate">associate pricing</span>
+                <div class="tooltip">
+                    <span class="tooltip-icon">?</span>
+                    <span class="tooltip-text" data-i18n="tooltip-associate">to be an associate you have to be referred by an existing associate or have commissioned once before</span>
+                </div>
+            </label>
+        </div>
+
+        <div class="calculator-footer">
+            <p data-i18n="calc-footer">the price quoted above is an estimate. please contact versutus0@gmail.com with
+                project details and files to order</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="profile-links">
+            <a href="https://www.youtube.com/Versutus" target="_blank">youtube</a>
+            <a href="https://music.apple.com/us/artist/versutus/1494564528" target="_blank">apple music</a>
+            <a href="https://open.spotify.com/artist/4TxIpp0lzeQxsZqFjlKDZQ" target="_blank">spotify</a>
+            <button id="email-button" class="email-button">versutus0@gmail.com</button>
+        </div>
+    </footer>
+
+</body>
+
+</html>
