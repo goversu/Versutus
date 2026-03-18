@@ -12,7 +12,7 @@ git commit -m "%msg%"
 
 echo Pushing to GitHub...
 git branch -M main
-git push %REPO_URL% %BRANCH%
+git push --force %REPO_URL% %BRANCH%
 
 echo Done!
 pause
