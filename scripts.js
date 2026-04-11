@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const coefficient = 4 * sumWeights;
-            let price = 30 / 2 * Math.pow(lengthMinutes * coefficient, 0.8);
+            let price = 50 / 2 * Math.pow(lengthMinutes * coefficient, 0.8);
 
             // Associate discounts
             if (bulk.associate.checked) {
