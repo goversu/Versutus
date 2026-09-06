@@ -834,6 +834,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function addSiteVersion() {
         const footer = document.querySelector('footer');
         if (!footer) return;
+        if (document.getElementById('site-version')) return;
 
         // Ensure the footer can wrap its flex items.
         // This puts the version on its own line below the profile links.

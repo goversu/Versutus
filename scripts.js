@@ -319,4 +319,28 @@ document.addEventListener('DOMContentLoaded', () => {
     if (emailButton) {
         emailButton.addEventListener('click', copyEmail);
     }
+
+    // Add site version text at the bottom of the footer
+    function addSiteVersion() {
+        const footer = document.querySelector('footer');
+        if (!footer) return;
+
+        // Ensure the footer can wrap its flex items.
+        // This puts the version on its own line below the profile links.
+        footer.style.flexWrap = 'wrap';
+
+        const versionSpan = document.createElement('span');
+        versionSpan.textContent = `last update: ${new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString().slice(0, 19).replace('T', ' ')} UTC`;
+        versionSpan.style.fontSize = '0.7em';
+        versionSpan.style.opacity = '0.7';
+        versionSpan.style.display = 'block';
+        versionSpan.style.textAlign = 'center';
+        versionSpan.style.flexBasis = '100%';
+        versionSpan.style.width = '100%';
+        versionSpan.style.marginTop = '5px';
+        versionSpan.id = 'site-version';
+        footer.appendChild(versionSpan);
+    }
+
+    addSiteVersion();
 });
