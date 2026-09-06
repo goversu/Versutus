@@ -821,33 +821,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add site version text beside email
     function addSiteVersion() {
-        const emailAddress = 'versutus0@gmail.com';
-        const versionText = 'v1.0.0';
-        const allElements = document.querySelectorAll('a, button, span, div, p');
-        let target = null;
+        const footer = document.querySelector('footer');
+        if (!footer) return;
 
-        for (let el of allElements) {
-            if (el.textContent.trim() === emailAddress) {
-                target = el;
-                break;
-            }
-        }
-
-        if (target) {
-            const versionSpan = document.createElement('span');
-            versionSpan.textContent = versionText;
-            versionSpan.style.marginLeft = '6px';
-            versionSpan.style.fontSize = '0.7em';
-            versionSpan.style.opacity = '0.7';
-            versionSpan.style.position = 'relative';
-            versionSpan.style.top = '0.15em';
-            versionSpan.style.display = 'inline';
-            versionSpan.id = 'site-version';
-            target.parentElement.insertBefore(versionSpan, target.nextSibling);
-            console.log('[version] version text inserted beside email');
-        } else {
-            console.warn('[version] email element not found; version not inserted');
-        }
+        const versionSpan = document.createElement('span');
+        versionSpan.textContent = `last update: ${new Date().toISOString().slice(0, 19).replace('T', ' ')}`;
+        versionSpan.style.fontSize = '0.7em';
+        versionSpan.style.opacity = '0.7';
+        versionSpan.style.display = 'block';
+        versionSpan.style.textAlign = 'center';
+        versionSpan.style.marginTop = '5px';
+        versionSpan.id = 'site-version';
+        footer.appendChild(versionSpan);
     }
 
     // Start loading
