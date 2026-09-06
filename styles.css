@@ -855,6 +855,11 @@ footer {
     border-color: #58a6ff;
 }
 
+.icon-action-btn.share-btn:hover:not(:disabled) {
+    color: #78d9a9;
+    border-color: #78d9a9;
+}
+
 .action-btn {
     background: black;
     border: 1px solid #333;
@@ -895,6 +900,17 @@ footer {
 .action-btn.download-btn:hover {
     color: #58a6ff;
     border-color: #58a6ff;
+}
+
+.action-btn.share-btn {
+    color: #aaa;
+    font-size: 12px;
+    padding: 5px 8px;
+}
+
+.action-btn.share-btn:hover {
+    color: #78d9a9;
+    border-color: #78d9a9;
 }
 
 .empty-state {

@@ -708,6 +708,48 @@ document.addEventListener('DOMContentLoaded', () => {
             const song = filteredCatalog[index];
             if (song) this.downloadSong(song.url, song.title, event, buttonEl);
         },
+        async shareSong(url, event, buttonEl) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            const targetBtn = buttonEl || (event ? event.currentTarget : null);
+            const originalContent = targetBtn ? targetBtn.innerHTML : '';
+            if (targetBtn) {
+                targetBtn.innerHTML = '✓';
+                targetBtn.style.pointerEvents = 'none';
+            }
+            try {
+                if (!navigator.clipboard || !navigator.clipboard.writeText) {
+                    throw new Error('Clipboard API not supported');
+                }
+                await navigator.clipboard.writeText(url);
+                if (targetBtn) {
+                    setTimeout(() => {
+                        targetBtn.innerHTML = originalContent;
+                        targetBtn.style.pointerEvents = '';
+                    }, 1200);
+                }
+            } catch (err) {
+                console.warn('[shareSong] Clipboard write failed, falling back to prompt:', err);
+                if (targetBtn) {
+                    targetBtn.innerHTML = originalContent;
+                    targetBtn.style.pointerEvents = '';
+                }
+                window.prompt('Copy this link to share:', url);
+            }
+        },
+        shareFromQueue(index, event, buttonEl) {
+            const song = queue[index];
+            if (song) this.shareSong(song.url, event, buttonEl);
+        },
+        shareFromCatalog(index, event, buttonEl) {
+            const filteredCatalog = searchQuery
+                ? catalog.filter(song => song.title.toLowerCase().includes(searchQuery) || (song.artist && song.artist.toLowerCase().includes(searchQuery)))
+                : catalog;
+            const song = filteredCatalog[index];
+            if (song) this.shareSong(song.url, event, buttonEl);
+        },
         playFromCatalogIndex(index) {
             const filteredCatalog = searchQuery
                 ? catalog.filter(song => song.title.toLowerCase().includes(searchQuery) || (song.artist && song.artist.toLowerCase().includes(searchQuery)))
@@ -793,6 +835,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="item-actions" onclick="event.stopPropagation()">
                         <button class="icon-action-btn download-btn" title="Download" onclick="window.player.downloadFromQueue(${i}, event, this)">⤓</button>
+                        <button class="icon-action-btn share-btn" title="Share song" onclick="window.player.shareFromQueue(${i}, event, this)">🔗</button>
                         <button class="icon-action-btn" title="Move Up" ${i === 0 ? 'disabled' : ''} onclick="window.player.moveQueueItem(${i}, -1, event)">▲</button>
                         <button class="icon-action-btn" title="Move Down" ${i === queue.length - 1 ? 'disabled' : ''} onclick="window.player.moveQueueItem(${i}, 1, event)">▼</button>
                         <button class="icon-action-btn delete-btn" title="Remove" onclick="window.player.removeFromQueue(${i}, event)">✕</button>
@@ -843,6 +886,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         </button>
                         <button class="action-btn download-btn" title="Download song" onclick="window.player.downloadFromCatalog(${i}, event, this)">
                             ⤓
+                        </button>
+                        <button class="action-btn share-btn" title="Share song" onclick="window.player.shareFromCatalog(${i}, event, this)">
+                            🔗
                         </button>
                     </div>
                 </div>
