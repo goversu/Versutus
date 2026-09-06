@@ -631,8 +631,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 const tempLink = document.createElement('a');
                 tempLink.href = url;
-                tempLink.target = '_blank';
-                tempLink.rel = 'noopener';
+                tempLink.download = `${filename}.mp3`;
+                tempLink.style.display = 'none';
                 document.body.appendChild(tempLink);
                 tempLink.click();
                 document.body.removeChild(tempLink);
