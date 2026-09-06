@@ -245,6 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 isPlaying = true;
                 updatePlayState(true);
                 startSeekTimer();
+                startStemsIfNeeded();
             },
             onpause: () => {
                 isPlaying = false;
@@ -404,9 +405,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             if (!currentHowl.playing()) {
                 currentHowl.play();
-            }
-            if (usingStems) {
-                syncAndResumeStems();
             }
         }
     }
@@ -868,34 +866,35 @@ document.addEventListener('DOMContentLoaded', () => {
         return isMuted ? 0 : volume;
     }
 
+    function getStemVolume(type) {
+        if (!usingStems) return 0;
+        const shouldPlay = stemToggles[type] && !isMuted;
+        return shouldPlay ? getEffectiveVolume() : 0;
+    }
+
     function updateAllVolumes() {
         const effVol = getEffectiveVolume();
         if (currentHowl) {
             currentHowl.volume(usingStems ? 0 : effVol);
         }
-        applyStemVolumes();
+        ['vocals', 'instrumental'].forEach(type => {
+            if (stemHowls[type]) {
+                stemHowls[type].volume(getStemVolume(type));
+            }
+        });
     }
 
-    function applyStemVolumes() {
-        if (!usingStems) return;
-        const effVol = getEffectiveVolume();
-        Object.keys(stemHowls).forEach(type => {
+    function startStemsIfNeeded() {
+        if (!currentHowl || !currentHowl.playing()) return;
+        const pos = currentHowl.seek() || 0;
+        ['vocals', 'instrumental'].forEach(type => {
             const stem = stemHowls[type];
             if (!stem) return;
-            const shouldPlay = stemToggles[type] && !isMuted;
-            stem.volume(shouldPlay ? effVol : 0);
-
-            if (shouldPlay) {
-                if (!stem.playing()) {
-                    const pos = currentHowl ? (currentHowl.seek() || 0) : 0;
-                    stem.seek(pos);
-                    stem.play();
-                }
-            } else {
-                if (stem.playing()) {
-                    stem.pause();
-                }
+            if (!stem.playing()) {
+                stem.seek(pos);
+                stem.play();
             }
+            stem.volume(getStemVolume(type));
         });
     }
 
@@ -993,22 +992,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function enterStemMode() {
-        if (!currentHowl || usingStems) return;
-        usingStems = true;
-        updateAllVolumes();
-    }
-
     function toggleStem(type) {
         if (!currentHowl) return;
-        stemToggles[type] = !stemToggles[type];
-
         if (!usingStems) {
-            enterStemMode();
-        } else {
-            applyStemVolumes();
+            usingStems = true;
         }
-
+        stemToggles[type] = !stemToggles[type];
+        updateAllVolumes();
+        startStemsIfNeeded();
         updateStemButtonState();
     }
 
