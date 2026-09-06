@@ -603,10 +603,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetBtn.style.pointerEvents = 'none';
             }
 
+            console.log('[downloadSong] Attempting download:', { url, filename });
+
             try {
                 const response = await fetch(url);
+                console.log('[downloadSong] Fetch response:', response.status, response.statusText);
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 const blob = await response.blob();
+                console.log('[downloadSong] Blob size:', blob.size);
                 const blobUrl = URL.createObjectURL(blob);
                 const tempLink = document.createElement('a');
                 tempLink.href = blobUrl;
@@ -624,13 +628,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 1200);
                 }
             } catch (err) {
-                console.warn('Direct blob download prevented (likely CORS). Falling back to direct URL:', err);
+                console.warn('[downloadSong] Direct blob download prevented (likely CORS). Falling back to direct URL:', err);
                 if (targetBtn) {
                     targetBtn.innerHTML = originalContent;
                     targetBtn.style.pointerEvents = '';
                 }
+
+                const fallbackUrl = url + (url.includes('?') ? '&' : '?') + 'response-content-disposition=attachment';
+                console.log('[downloadSong] Fallback URL:', fallbackUrl);
                 const tempLink = document.createElement('a');
-                tempLink.href = url;
+                tempLink.href = fallbackUrl;
                 tempLink.download = `${filename}.mp3`;
                 tempLink.style.display = 'none';
                 document.body.appendChild(tempLink);
@@ -785,6 +792,35 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/'/g, '&#039;');
     }
 
+    // Add site version text beside email
+    function addSiteVersion() {
+        const emailAddress = 'versutus0@gmail.com';
+        const versionText = 'v1.0.0';
+        const allElements = document.querySelectorAll('a, button, span, div, p');
+        let target = null;
+
+        for (let el of allElements) {
+            if (el.textContent.trim() === emailAddress) {
+                target = el;
+                break;
+            }
+        }
+
+        if (target) {
+            const versionSpan = document.createElement('span');
+            versionSpan.textContent = versionText;
+            versionSpan.style.marginLeft = '8px';
+            versionSpan.style.fontSize = '0.85em';
+            versionSpan.style.opacity = '0.7';
+            versionSpan.id = 'site-version';
+            target.parentElement.insertBefore(versionSpan, target.nextSibling);
+            console.log('[version] version text inserted beside email');
+        } else {
+            console.warn('[version] email element not found; version not inserted');
+        }
+    }
+
     // Start loading
     loadCatalog();
+    addSiteVersion();
 });
