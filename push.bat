@@ -22,21 +22,15 @@ SET BRANCH=main
 echo Checking for changes...
 git add -A
 
-:: Check if there are staged changes to commit
-git diff --cached --quiet
-if errorlevel 1 (
-    SET "msg=Auto-commit %date% %time%"
-    echo Committing changes: !msg!
-    git commit -m "!msg!"
-    
-    echo Syncing with GitHub - pulling latest remote changes...
-    git pull --rebase origin %BRANCH%
-    
-    echo Pushing changes to GitHub...
-    git push origin %BRANCH%
-) else (
-    echo No local changes detected to commit.
-)
+SET "msg=Auto-commit %date% %time%"
+echo Committing changes: !msg!
+git commit --allow-empty -m "!msg!"
+
+echo Syncing with GitHub - pulling latest remote changes...
+git pull --rebase origin %BRANCH%
+
+echo Pushing changes to GitHub...
+git push origin %BRANCH%
 
 echo.
 echo Done!

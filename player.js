@@ -836,9 +836,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (target) {
             const versionSpan = document.createElement('span');
             versionSpan.textContent = versionText;
-            versionSpan.style.marginLeft = '8px';
-            versionSpan.style.fontSize = '0.85em';
+            versionSpan.style.marginLeft = '6px';
+            versionSpan.style.fontSize = '0.7em';
             versionSpan.style.opacity = '0.7';
+            versionSpan.style.position = 'relative';
+            versionSpan.style.top = '0.15em';
+            versionSpan.style.display = 'inline';
             versionSpan.id = 'site-version';
             target.parentElement.insertBefore(versionSpan, target.nextSibling);
             console.log('[version] version text inserted beside email');
