@@ -781,7 +781,7 @@ document.addEventListener('DOMContentLoaded', () => {
             : catalog;
 
         if (catalogCountEl) {
-            catalogCountEl.textContent = `(${catalog.length})`;
+            catalogCountEl.textContent = `(${filteredCatalog.length})`;
         }
 
         if (filteredCatalog.length === 0) {
