@@ -631,38 +631,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetBtn.style.pointerEvents = 'none';
             }
 
-            const isVCircle = url.includes('v%E5%85%9C%E5%9C%88.mp3');
-
             try {
-                if (!isVCircle) {
-                    const response = await fetch(url);
-                    console.log('[downloadSong] Fetch response:', response.status, response.statusText);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    const blob = await response.blob();
-                    console.log('[downloadSong] Blob size:', blob.size);
-                    const blobUrl = URL.createObjectURL(blob);
-                    const tempLink = document.createElement('a');
-                    tempLink.href = blobUrl;
-                    tempLink.download = `${filename}.mp3`;
-                    document.body.appendChild(tempLink);
-                    tempLink.click();
+                const response = await fetch(url);
+                console.log('[downloadSong] Fetch response:', response.status, response.statusText);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const blob = await response.blob();
+                console.log('[downloadSong] Blob size:', blob.size);
+                const blobUrl = URL.createObjectURL(blob);
+                const tempLink = document.createElement('a');
+                tempLink.href = blobUrl;
+                tempLink.download = `${filename}.mp3`;
+                document.body.appendChild(tempLink);
+                tempLink.click();
+                setTimeout(() => {
+                    document.body.removeChild(tempLink);
+                    URL.revokeObjectURL(blobUrl);
+                }, 1500);
+
+                if (targetBtn) {
+                    targetBtn.innerHTML = '✓';
                     setTimeout(() => {
-                        document.body.removeChild(tempLink);
-                        URL.revokeObjectURL(blobUrl);
-                    }, 1500);
-
-                    if (targetBtn) {
-                        targetBtn.innerHTML = '✓';
-                        setTimeout(() => {
-                            targetBtn.innerHTML = originalContent;
-                            targetBtn.style.pointerEvents = '';
-                        }, 1200);
-                    }
-                    return;
+                        targetBtn.innerHTML = originalContent;
+                        targetBtn.style.pointerEvents = '';
+                    }, 1200);
                 }
-
-                // For v兜圈, skip fetch and go straight to fallback
-                throw new Error('Direct fallback for v兜圈');
             } catch (err) {
                 console.warn('[downloadSong] Falling back to opening in new tab:', err);
                 if (targetBtn) {
@@ -819,10 +811,14 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/'/g, '&#039;');
     }
 
-    // Add site version text beside email
+    // Add site version text at the bottom of the footer
     function addSiteVersion() {
         const footer = document.querySelector('footer');
         if (!footer) return;
+
+        // Ensure the footer can wrap its flex items.
+        // This puts the version on its own line below the profile links.
+        footer.style.flexWrap = 'wrap';
 
         const versionSpan = document.createElement('span');
         versionSpan.textContent = `last update: ${new Date().toISOString().slice(0, 19).replace('T', ' ')}`;
@@ -830,6 +826,8 @@ document.addEventListener('DOMContentLoaded', () => {
         versionSpan.style.opacity = '0.7';
         versionSpan.style.display = 'block';
         versionSpan.style.textAlign = 'center';
+        versionSpan.style.flexBasis = '100%';
+        versionSpan.style.width = '100%';
         versionSpan.style.marginTop = '5px';
         versionSpan.id = 'site-version';
         footer.appendChild(versionSpan);
