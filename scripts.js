@@ -7,7 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
             'nav-music': 'music',
             'nav-downloads': 'downloads',
             'music-title': 'music',
-            'queue-title': 'play queue',
+            'queue-title': 'queue',
+            'search-placeholder': 'search songs...',
+            'download': 'download',
+            'toggle-queue-show': 'show queue',
+            'toggle-queue-hide': 'hide queue',
             'catalog-title': 'all songs',
             'queue-empty': 'queue is empty',
             'queue-clear': 'clear',
@@ -51,7 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
             'nav-music': '音乐',
             'nav-downloads': '下载',
             'music-title': '音乐',
-            'queue-title': '播放队列',
+            'queue-title': '队列',
+            'search-placeholder': '搜索曲目...',
+            'download': '下载',
+            'toggle-queue-show': '展开队列',
+            'toggle-queue-hide': '收起队列',
             'catalog-title': '所有曲目',
             'queue-empty': '队列为空',
             'queue-clear': '清空',
@@ -95,7 +103,11 @@ document.addEventListener('DOMContentLoaded', () => {
             'nav-music': '音樂',
             'nav-downloads': '下載',
             'music-title': '音樂',
-            'queue-title': '播放佇列',
+            'queue-title': '佇列',
+            'search-placeholder': '搜尋曲目...',
+            'download': '下載',
+            'toggle-queue-show': '展開佇列',
+            'toggle-queue-hide': '收起佇列',
             'catalog-title': '所有曲目',
             'queue-empty': '佇列為空',
             'queue-clear': '清空',
@@ -142,6 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (translations[lang] && translations[lang][key]) {
                 if (el.tagName === 'INPUT' && (el.type === 'button' || el.type === 'submit')) {
                     el.value = translations[lang][key];
+                } else if (el.tagName === 'INPUT' && el.type === 'text') {
+                    el.placeholder = translations[lang][key];
                 } else {
                     el.innerHTML = translations[lang][key];
                 }

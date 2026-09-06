@@ -25,8 +25,6 @@
 
 <div class="container">
     <section class="music-section">
-        <h2 data-i18n="music-title">music</h2>
-
         <!-- Main Player Card -->
         <div class="player-card">
             <div class="player-track-info">
@@ -70,35 +68,51 @@
                 </button>
             </div>
 
-            <!-- Volume Bar -->
+            <!-- Volume Bar (Default 100%) -->
             <div class="player-volume">
                 <button id="btn-mute" class="volume-btn" title="Mute" aria-label="Mute or unmute">
                     <span id="mute-icon">🔊</span>
                 </button>
-                <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="0.8" aria-label="Volume">
-                <span id="volume-percent">80%</span>
+                <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1.0" aria-label="Volume">
+                <span id="volume-percent">100%</span>
             </div>
         </div>
 
-        <!-- Play Queue Section -->
-        <div class="playlist-container">
-            <div class="section-subhead">
-                <h3 data-i18n="queue-title">play queue</h3>
+        <!-- Queue Section (Collapsible by default) -->
+        <div class="playlist-container queue-container">
+            <div class="section-subhead clickable-header" id="queue-toggle-header">
+                <div class="title-with-badge">
+                    <h3 data-i18n="queue-title">queue</h3>
+                    <span id="queue-count" class="badge-count">(0)</span>
+                    <span id="queue-toggle-arrow" class="toggle-arrow">▼</span>
+                </div>
                 <div class="queue-actions">
-                    <button id="btn-clear-queue" class="mini-btn" data-i18n="queue-clear">clear</button>
+                    <button id="btn-clear-queue" class="mini-btn" data-i18n="queue-clear" onclick="event.stopPropagation()">clear</button>
                 </div>
             </div>
-            <div id="queue-list" class="queue-list">
-                <!-- Dynamically rendered queue items -->
+            <div id="queue-collapsible" class="queue-collapsible collapsed">
+                <div id="queue-list" class="queue-list">
+                    <!-- Dynamically rendered queue items -->
+                </div>
             </div>
         </div>
 
-        <!-- Catalog / All Songs Section -->
-        <div class="playlist-container">
+        <!-- Catalog / All Songs Section with Search -->
+        <div class="playlist-container catalog-container">
             <div class="section-subhead">
-                <h3 data-i18n="catalog-title">all songs</h3>
+                <div class="title-with-badge">
+                    <h3 data-i18n="catalog-title">all songs</h3>
+                    <span id="catalog-count" class="badge-count">(0)</span>
+                </div>
                 <button id="btn-queue-all" class="mini-btn" data-i18n="queue-add-all">queue all</button>
             </div>
+
+            <!-- Search input -->
+            <div class="search-bar-wrap">
+                <input type="text" id="search-songs" class="search-input" data-i18n="search-placeholder" placeholder="search songs..." autocomplete="off">
+                <button id="search-clear-btn" class="search-clear-btn" style="display: none;" title="Clear search">✕</button>
+            </div>
+
             <div id="catalog-list" class="catalog-list">
                 <!-- Dynamically rendered catalog items -->
             </div>

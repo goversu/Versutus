@@ -565,8 +565,8 @@ footer {
 
 /* Playlist & Queue Containers */
 .playlist-container {
-    margin-top: 25px;
-    margin-bottom: 25px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .section-subhead {
@@ -575,22 +575,111 @@ footer {
     align-items: center;
     border-bottom: 1px solid #333;
     padding-bottom: 8px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
+}
+
+.clickable-header {
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.15s ease;
+}
+
+.clickable-header:hover h3 {
+    color: #fff;
+}
+
+.title-with-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .section-subhead h3 {
     margin: 0;
-    font-size: 1.1em;
-    color: #eee;
+    font-size: 1.05em;
+    color: #ccc;
     text-transform: lowercase;
+}
+
+.badge-count {
+    font-size: 11px;
+    color: #777;
+    font-weight: normal;
+}
+
+.toggle-arrow {
+    font-size: 10px;
+    color: #888;
+    margin-left: 2px;
+    transition: transform 0.2s ease;
+}
+
+.queue-collapsible {
+    max-height: 800px;
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+    opacity: 1;
+}
+
+.queue-collapsible.collapsed {
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+    margin: 0;
+}
+
+/* Search Bar */
+.search-bar-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.search-input {
+    width: 100%;
+    background-color: #181818;
+    border: 1px solid #333;
+    border-radius: 6px;
+    color: #fff;
+    padding: 9px 36px 9px 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.search-input:focus {
+    border-color: #555;
+    background-color: #1d1d1d;
+}
+
+.search-input::placeholder {
+    color: #666;
+}
+
+.search-clear-btn {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.search-clear-btn:hover {
+    color: #fff;
 }
 
 .mini-btn {
     background-color: black;
     color: #aaa;
     border: 1px solid #333;
-    padding: 5px 12px;
-    font-size: 12px;
+    padding: 4px 10px;
+    font-size: 11px;
     font-family: 'Courier New', monospace;
     cursor: pointer;
     border-radius: 4px;
@@ -613,7 +702,7 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 14px;
+    padding: 9px 12px;
     background-color: #161616;
     border: 1px solid #282828;
     border-radius: 6px;
@@ -638,7 +727,7 @@ footer {
 .item-left {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     flex: 1;
     cursor: pointer;
     overflow: hidden;
@@ -666,7 +755,7 @@ footer {
 }
 
 .item-title {
-    font-size: 14px;
+    font-size: 13px;
     color: #eee;
     font-weight: bold;
     text-overflow: ellipsis;
@@ -674,7 +763,7 @@ footer {
 }
 
 .item-artist {
-    font-size: 12px;
+    font-size: 11px;
     color: #777;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -683,7 +772,7 @@ footer {
 .item-actions {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     flex-shrink: 0;
 }
 
@@ -692,8 +781,8 @@ footer {
     border: 1px solid #333;
     color: #aaa;
     border-radius: 4px;
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -701,6 +790,7 @@ footer {
     font-size: 11px;
     padding: 0;
     font-family: 'Courier New', monospace;
+    text-decoration: none;
     transition: all 0.15s;
 }
 
@@ -720,15 +810,24 @@ footer {
     border-color: #f85149;
 }
 
+.icon-action-btn.download-btn:hover:not(:disabled) {
+    color: #58a6ff;
+    border-color: #58a6ff;
+}
+
 .action-btn {
     background: black;
     border: 1px solid #333;
     color: white;
     border-radius: 4px;
-    padding: 6px 12px;
+    padding: 5px 10px;
     cursor: pointer;
     font-family: 'Courier New', monospace;
-    font-size: 12px;
+    font-size: 11px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.15s;
 }
 
@@ -738,8 +837,8 @@ footer {
 }
 
 .action-btn.play-btn {
-    padding: 6px 10px;
-    font-size: 12px;
+    padding: 5px 9px;
+    font-size: 11px;
 }
 
 .action-btn.add-btn:hover {
@@ -747,12 +846,78 @@ footer {
     border-color: #58a6ff;
 }
 
+.action-btn.download-btn {
+    color: #aaa;
+    font-size: 12px;
+    padding: 5px 8px;
+}
+
+.action-btn.download-btn:hover {
+    color: #58a6ff;
+    border-color: #58a6ff;
+}
+
 .empty-state {
-    padding: 24px;
+    padding: 20px;
     text-align: center;
     color: #666;
-    font-size: 13px;
+    font-size: 12px;
     font-style: italic;
     border: 1px dashed #333;
     border-radius: 6px;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 600px) {
+    .player-card {
+        padding: 14px;
+        margin-bottom: 18px;
+    }
+
+    .track-visual-disc {
+        width: 44px;
+        height: 44px;
+    }
+
+    .disc-hole {
+        width: 10px;
+        height: 10px;
+    }
+
+    .track-title {
+        font-size: 1.1em;
+    }
+
+    .player-controls {
+        gap: 8px;
+    }
+
+    .control-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 13px;
+    }
+
+    .control-btn.play-main-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
+    }
+
+    .player-volume input[type="range"] {
+        width: 65px;
+    }
+
+    .item-actions {
+        gap: 4px;
+    }
+
+    .action-btn {
+        padding: 4px 8px;
+        font-size: 10px;
+    }
+
+    .action-btn.download-btn {
+        padding: 4px 6px;
+    }
 }

@@ -4,15 +4,17 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Player State
     let catalog = [];
-    let queue = [];
+    let defaultQueue = []; // Preserves default (newest-to-oldest) order
+    let queue = [];        // Active playback queue (reflects true playback order)
     let currentIndex = -1;
     let currentHowl = null;
     let isPlaying = false;
     let isShuffle = false;
     let repeatMode = 'off'; // 'off' | 'all' | 'one'
-    let volume = 0.8;
+    let volume = 1.0;       // Default volume 100%
     let isMuted = false;
     let seekTimer = null;
+    let searchQuery = '';
 
     // DOM Elements
     const playerDisc = document.getElementById('player-disc');
@@ -32,10 +34,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const muteIcon = document.getElementById('mute-icon');
     const volumeBar = document.getElementById('volume-bar');
     const volumePercent = document.getElementById('volume-percent');
+    
+    // Queue & Catalog Elements
+    const queueToggleHeader = document.getElementById('queue-toggle-header');
+    const queueCollapsible = document.getElementById('queue-collapsible');
+    const queueToggleArrow = document.getElementById('queue-toggle-arrow');
+    const queueCountEl = document.getElementById('queue-count');
+    const catalogCountEl = document.getElementById('catalog-count');
     const queueList = document.getElementById('queue-list');
     const catalogList = document.getElementById('catalog-list');
     const btnClearQueue = document.getElementById('btn-clear-queue');
     const btnQueueAll = document.getElementById('btn-queue-all');
+    const searchInput = document.getElementById('search-songs');
+    const searchClearBtn = document.getElementById('search-clear-btn');
 
     // Format seconds to mm:ss
     function formatTime(secs) {
@@ -62,12 +73,35 @@ document.addEventListener('DOMContentLoaded', () => {
         return song.id || 'track';
     }
 
+    // Extract clean, URL/DOM-safe slug ID derived from filename or url
+    function getSongId(song, index) {
+        if (song.id && song.id.trim()) {
+            return song.id.trim();
+        }
+        const title = getSongTitle(song);
+        const slug = title.toLowerCase()
+            .replace(/[^a-z0-9_-]/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
+        return slug || `track-${index + 1}`;
+    }
+
     // Extract song artist, falling back to versutus
     function getSongArtist(song) {
         if (song.artist && song.artist.trim()) {
             return song.artist.trim();
         }
         return 'versutus';
+    }
+
+    // Shuffle helper (Fisher-Yates)
+    function shuffleArray(arr) {
+        const copy = [...arr];
+        for (let i = copy.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
     }
 
     // Load catalog from catalog.json
@@ -77,15 +111,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const rawCatalog = await res.json();
             
-            // Normalize songs with title and artist fallback
-            catalog = rawCatalog.map(song => ({
+            // Normalize songs with auto-derived IDs and titles
+            catalog = rawCatalog.map((song, i) => ({
                 ...song,
                 title: getSongTitle(song),
+                id: getSongId(song, i),
                 artist: getSongArtist(song)
             }));
             
-            // Initialize queue with catalog songs
-            queue = [...catalog];
+            // Default queue: newest to oldest (catalog order)
+            defaultQueue = [...catalog];
+            queue = [...defaultQueue];
             
             renderCatalog();
             renderQueue();
@@ -121,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update UI info
         playerTitle.removeAttribute('data-i18n');
         playerTitle.textContent = song.title;
-        playerArtist.textContent = song.artist || 'versutus';
+        playerArtist.textContent = song.artist;
         currentTimeEl.textContent = '0:00';
         totalDurationEl.textContent = '0:00';
         seekBar.value = 0;
@@ -214,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.applyTranslations) window.applyTranslations();
     }
 
-    // Track progression logic
+    // Track progression logic (true order)
     function handleTrackEnd() {
         if (repeatMode === 'one') {
             currentHowl.seek(0);
@@ -222,15 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (isShuffle && queue.length > 1) {
-            let nextRandomIndex = currentIndex;
-            while (nextRandomIndex === currentIndex) {
-                nextRandomIndex = Math.floor(Math.random() * queue.length);
-            }
-            loadTrack(nextRandomIndex, true);
-            return;
-        }
-
+        // Since queue reflects true order, the next song is always currentIndex + 1
         const nextIndex = currentIndex + 1;
         if (nextIndex < queue.length) {
             loadTrack(nextIndex, true);
@@ -238,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (repeatMode === 'all') {
                 loadTrack(0, true);
             } else {
-                // Finished queue
+                // Reached end of queue
                 currentHowl.stop();
                 updatePlayState(false);
                 stopSeekTimer();
@@ -250,16 +278,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function playNext() {
         if (queue.length === 0) return;
-
-        if (isShuffle && queue.length > 1) {
-            let nextRandomIndex = currentIndex;
-            while (nextRandomIndex === currentIndex) {
-                nextRandomIndex = Math.floor(Math.random() * queue.length);
-            }
-            loadTrack(nextRandomIndex, true);
-            return;
-        }
-
         let nextIndex = currentIndex + 1;
         if (nextIndex >= queue.length) {
             nextIndex = 0;
@@ -335,7 +353,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Volume & Mute
+    // Volume & Mute (Default 100%)
+    volumeBar.value = 1.0;
+    volumePercent.textContent = '100%';
+
     volumeBar.addEventListener('input', (e) => {
         volume = parseFloat(e.target.value);
         isMuted = volume === 0;
@@ -354,20 +375,50 @@ document.addEventListener('DOMContentLoaded', () => {
             volumePercent.textContent = '0%';
             if (currentHowl) currentHowl.volume(0);
         } else {
-            if (volume === 0) volume = 0.8;
+            if (volume === 0) volume = 1.0;
             volumeBar.value = volume;
             volumePercent.textContent = `${Math.round(volume * 100)}%`;
             if (currentHowl) currentHowl.volume(volume);
         }
     });
 
-    // Shuffle & Repeat Mode Toggles
+    // Shuffle Toggle: true order manipulation
+    // On: randomizes queue; Off: restores default order (newest to oldest)
     btnShuffle.addEventListener('click', () => {
         isShuffle = !isShuffle;
         btnShuffle.classList.toggle('active', isShuffle);
         btnShuffle.title = isShuffle ? 'Shuffle (on)' : 'Shuffle (off)';
+
+        if (queue.length <= 1) return;
+
+        const currentSong = currentIndex >= 0 ? queue[currentIndex] : null;
+
+        if (isShuffle) {
+            // Re-order queue randomly
+            if (currentSong) {
+                // Keep the current song playing at index 0 and randomize all other songs
+                const remaining = defaultQueue.filter(s => s.id !== currentSong.id);
+                queue = [currentSong, ...shuffleArray(remaining)];
+                currentIndex = 0;
+            } else {
+                queue = shuffleArray(defaultQueue);
+                currentIndex = 0;
+            }
+        } else {
+            // Restore default order (newest to oldest)
+            queue = [...defaultQueue];
+            if (currentSong) {
+                currentIndex = queue.findIndex(s => s.id === currentSong.id);
+                if (currentIndex === -1) currentIndex = 0;
+            } else {
+                currentIndex = 0;
+            }
+        }
+
+        renderQueue();
     });
 
+    // Repeat Mode Toggle
     btnRepeat.addEventListener('click', () => {
         if (repeatMode === 'off') {
             repeatMode = 'all';
@@ -392,7 +443,38 @@ document.addEventListener('DOMContentLoaded', () => {
     btnNext.addEventListener('click', playNext);
     btnPrev.addEventListener('click', playPrev);
 
-    // Queue Manipulations
+    // Collapsible Queue Toggle
+    if (queueToggleHeader && queueCollapsible) {
+        queueToggleHeader.addEventListener('click', () => {
+            const isCollapsed = queueCollapsible.classList.toggle('collapsed');
+            if (queueToggleArrow) {
+                queueToggleArrow.textContent = isCollapsed ? '▼' : '▲';
+            }
+        });
+    }
+
+    // Search filter for catalog
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.trim().toLowerCase();
+            if (searchClearBtn) {
+                searchClearBtn.style.display = searchQuery ? 'inline-block' : 'none';
+            }
+            renderCatalog();
+        });
+    }
+
+    if (searchClearBtn) {
+        searchClearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            searchQuery = '';
+            searchClearBtn.style.display = 'none';
+            searchInput.focus();
+            renderCatalog();
+        });
+    }
+
+    // Queue Manipulations Window API
     window.player = {
         playFromQueue(index) {
             loadTrack(index, true);
@@ -409,6 +491,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Add right after current track and play
                 const insertAt = currentIndex >= 0 ? currentIndex + 1 : queue.length;
                 queue.splice(insertAt, 0, { ...song });
+                defaultQueue.push({ ...song });
                 loadTrack(insertAt, true);
             }
         },
@@ -416,9 +499,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const song = catalog.find(s => s.id === id);
             if (!song) return;
             queue.push({ ...song });
+            defaultQueue.push({ ...song });
             renderQueue();
 
-            // If nothing was loaded, prepare it
             if (currentIndex === -1) {
                 loadTrack(0, false);
             }
@@ -427,9 +510,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (event) event.stopPropagation();
             if (index < 0 || index >= queue.length) return;
 
+            const removedSong = queue[index];
+            const defIndex = defaultQueue.findIndex(s => s.id === removedSong.id);
+            if (defIndex !== -1) defaultQueue.splice(defIndex, 1);
+
             if (index === currentIndex) {
                 if (queue.length === 1) {
                     queue = [];
+                    defaultQueue = [];
                     resetPlayerDisplay();
                     return;
                 }
@@ -466,10 +554,14 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         clearQueue() {
             queue = [];
+            defaultQueue = [];
             resetPlayerDisplay();
         },
         queueAll() {
-            catalog.forEach(song => queue.push({ ...song }));
+            catalog.forEach(song => {
+                queue.push({ ...song });
+                defaultQueue.push({ ...song });
+            });
             renderQueue();
             if (currentIndex === -1 && queue.length > 0) {
                 loadTrack(0, false);
@@ -477,15 +569,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    btnClearQueue.addEventListener('click', () => window.player.clearQueue());
-    btnQueueAll.addEventListener('click', () => window.player.queueAll());
+    if (btnClearQueue) {
+        btnClearQueue.addEventListener('click', () => window.player.clearQueue());
+    }
+    if (btnQueueAll) {
+        btnQueueAll.addEventListener('click', () => window.player.queueAll());
+    }
 
     // Render Play Queue UI
     function renderQueue() {
+        if (queueCountEl) {
+            queueCountEl.textContent = `(${queue.length})`;
+        }
+
         if (!queueList) return;
 
         if (queue.length === 0) {
             queueList.innerHTML = `<div class="empty-state" data-i18n="queue-empty">queue is empty - click "+ queue" on any song below</div>`;
+            if (window.applyTranslations) window.applyTranslations();
             return;
         }
 
@@ -501,7 +602,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="item-artist">${escapeHtml(song.artist || 'versutus')}</span>
                         </div>
                     </div>
-                    <div class="item-actions">
+                    <div class="item-actions" onclick="event.stopPropagation()">
+                        <a href="${song.url}" download="${escapeHtml(song.title)}.mp3" class="icon-action-btn download-btn" title="Download" target="_blank" rel="noopener">⤓</a>
                         <button class="icon-action-btn" title="Move Up" ${i === 0 ? 'disabled' : ''} onclick="window.player.moveQueueItem(${i}, -1, event)">▲</button>
                         <button class="icon-action-btn" title="Move Down" ${i === queue.length - 1 ? 'disabled' : ''} onclick="window.player.moveQueueItem(${i}, 1, event)">▼</button>
                         <button class="icon-action-btn delete-btn" title="Remove" onclick="window.player.removeFromQueue(${i}, event)">✕</button>
@@ -509,18 +611,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }).join('');
+
+        if (window.applyTranslations) window.applyTranslations();
     }
 
-    // Render Catalog UI
+    // Render Catalog UI with Search Filtering & Download Button
     function renderCatalog() {
         if (!catalogList) return;
 
-        if (catalog.length === 0) {
-            catalogList.innerHTML = `<div class="empty-state">no songs found in catalog</div>`;
+        // Apply search filter if query is non-empty
+        const filteredCatalog = searchQuery
+            ? catalog.filter(song => song.title.toLowerCase().includes(searchQuery) || (song.artist && song.artist.toLowerCase().includes(searchQuery)))
+            : catalog;
+
+        if (catalogCountEl) {
+            catalogCountEl.textContent = `(${catalog.length})`;
+        }
+
+        if (filteredCatalog.length === 0) {
+            catalogList.innerHTML = searchQuery
+                ? `<div class="empty-state">no songs found matching "${escapeHtml(searchQuery)}"</div>`
+                : `<div class="empty-state">no songs in catalog</div>`;
             return;
         }
 
-        catalogList.innerHTML = catalog.map((song, i) => {
+        catalogList.innerHTML = filteredCatalog.map((song, i) => {
             const isCurrent = currentIndex >= 0 && queue[currentIndex] && queue[currentIndex].id === song.id;
             return `
                 <div class="catalog-item ${isCurrent ? 'active' : ''}">
@@ -538,10 +653,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button class="action-btn add-btn" title="Add to queue" onclick="window.player.addToQueue('${song.id}')">
                             + queue
                         </button>
+                        <a href="${song.url}" download="${escapeHtml(song.title)}.mp3" class="action-btn download-btn" target="_blank" rel="noopener" title="Download song">
+                            ⤓
+                        </a>
                     </div>
                 </div>
             `;
         }).join('');
+
+        if (window.applyTranslations) window.applyTranslations();
     }
 
     function escapeHtml(text) {
