@@ -563,6 +563,46 @@ footer {
     text-align: right;
 }
 
+/* Stem Toggle Controls */
+.stem-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    font-family: 'Courier New', monospace;
+}
+
+.stem-label {
+    font-size: 12px;
+    color: #888;
+    margin-right: 4px;
+}
+
+.stem-btn {
+    background-color: black;
+    color: #aaa;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 5px 12px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.15s;
+}
+
+.stem-btn.active {
+    color: #fff;
+    border-color: #58a6ff;
+    background-color: #13233a;
+}
+
+.stem-btn:hover {
+    background-color: #222;
+    border-color: #666;
+    color: #fff;
+}
+
 /* Playlist & Queue Containers */
 .playlist-container {
     margin-top: 20px;
