@@ -1,3 +1,5 @@
+implement the appropriate chinese translations for the buttons and the word "stems" and the new update time is 22:48 6/9/2026
+
 there still aren't any toggle buttons visible when the song "p paradice" is playing. can we do some debugging? tell me what to open and what you need to see
 the new update time is 22:43 6/9/2026
 
