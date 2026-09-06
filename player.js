@@ -624,14 +624,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 1200);
                 }
             } catch (err) {
-                console.warn('Direct blob download prevented (likely CORS). Falling back to same-tab navigation:', err);
+                console.warn('Direct blob download prevented (likely CORS). Falling back to direct URL:', err);
                 if (targetBtn) {
                     targetBtn.innerHTML = originalContent;
                     targetBtn.style.pointerEvents = '';
                 }
-                // Use same-tab navigation — audio/mpeg content type causes the browser
-                // to download the file rather than render it, avoiding a stray new tab.
-                window.location.href = url;
+                const tempLink = document.createElement('a');
+                tempLink.href = url;
+                tempLink.target = '_blank';
+                tempLink.rel = 'noopener';
+                document.body.appendChild(tempLink);
+                tempLink.click();
+                document.body.removeChild(tempLink);
             }
         },
         downloadFromQueue(index, event, buttonEl) {
