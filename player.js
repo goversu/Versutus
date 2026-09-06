@@ -16,6 +16,50 @@ document.addEventListener('DOMContentLoaded', () => {
     let seekTimer = null;
     let searchQuery = '';
 
+    // Embedded fallback catalog for local file:// usage
+    const FALLBACK_CATALOG = [
+      {
+        "url": "https://pub-a277c8d4ae8148c6a7cd515084eb58f1.r2.dev/v%E5%85%9C%E5%9C%88.mp3",
+        "timeAdded": "2026-09-06 16:45:00"
+      },
+      {
+        "url": "https://pub-a277c8d4ae8148c6a7cd515084eb58f1.r2.dev/p%20%E5%83%8F%E6%99%B4%E5%A4%A9%E5%83%8F%E9%9B%A8%E5%A4%A9%20prod_2.mp3",
+        "timeAdded": "2026-09-06 16:44:00"
+      },
+      {
+        "url": "https://pub-a277c8d4ae8148c6a7cd515084eb58f1.r2.dev/p%20been%20like%20this.mp3",
+        "timeAdded": "2026-09-06 16:43:00"
+      },
+      {
+        "url": "https://pub-a277c8d4ae8148c6a7cd515084eb58f1.r2.dev/p%20highs%20and%20lows%20dave%20the%20diver.mp3",
+        "timeAdded": "2026-09-06 16:42:00"
+      },
+      {
+        "url": "https://pub-a277c8d4ae8148c6a7cd515084eb58f1.r2.dev/p%20cry%20baby_3.mp3",
+        "timeAdded": "2026-09-06 16:41:00"
+      },
+      {
+        "url": "https://pub-a277c8d4ae8148c6a7cd515084eb58f1.r2.dev/p%20still%20dreaming%20syco%20boba%20again%20rec_2.mp3",
+        "timeAdded": "2026-09-06 15:00:00"
+      },
+      {
+        "url": "https://pub-a277c8d4ae8148c6a7cd515084eb58f1.r2.dev/p%20eye%20to%20eye%20cover_2.mp3",
+        "timeAdded": "2026-09-06 14:00:00"
+      },
+      {
+        "url": "https://pub-a277c8d4ae8148c6a7cd515084eb58f1.r2.dev/p%20paradice.mp3",
+        "timeAdded": "2026-09-06 13:00:00"
+      },
+      {
+        "url": "https://pub-a277c8d4ae8148c6a7cd515084eb58f1.r2.dev/p%20sennichite_9.mp3",
+        "timeAdded": "2026-09-06 12:00:00"
+      },
+      {
+        "url": "https://pub-a277c8d4ae8148c6a7cd515084eb58f1.r2.dev/zoey's%20arcade_4.mp3",
+        "timeAdded": "2026-09-06 11:00:00"
+      }
+    ];
+
     // DOM Elements
     const playerDisc = document.getElementById('player-disc');
     const playerTitle = document.getElementById('player-title');
@@ -104,48 +148,46 @@ document.addEventListener('DOMContentLoaded', () => {
         return copy;
     }
 
-    // Load catalog from catalog.json
+    // Load catalog from catalog.json, falling back to embedded catalog if fetch fails
     async function loadCatalog() {
+        let rawCatalog;
         try {
             const res = await fetch('catalog.json');
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const rawCatalog = await res.json();
-            
-            // Sort songs by timeAdded descending (newest at the top)
-            rawCatalog.sort((a, b) => {
-                const parseDate = (d) => {
-                    if (!d) return 0;
-                    const iso = d.includes('T') ? d : d.replace(' ', 'T');
-                    const ts = new Date(iso).getTime();
-                    return isNaN(ts) ? 0 : ts;
-                };
-                return parseDate(b.timeAdded) - parseDate(a.timeAdded);
-            });
-
-            // Normalize songs with auto-derived IDs and titles
-            catalog = rawCatalog.map((song, i) => ({
-                ...song,
-                title: getSongTitle(song),
-                id: getSongId(song, i),
-                artist: getSongArtist(song)
-            }));
-            
-            // Default queue: newest to oldest (sorted catalog order)
-            defaultQueue = [...catalog];
-            queue = [...defaultQueue];
-            
-            renderCatalog();
-            renderQueue();
-
-            if (queue.length > 0) {
-                // Prepare the first song without auto-playing
-                loadTrack(0, false);
-            }
+            rawCatalog = await res.json();
         } catch (err) {
-            console.error('Failed to load music catalog:', err);
-            if (catalogList) {
-                catalogList.innerHTML = `<div class="empty-state">failed to load catalog</div>`;
-            }
+            console.warn('Failed to fetch catalog.json, using embedded fallback catalog:', err);
+            rawCatalog = [...FALLBACK_CATALOG];
+        }
+
+        // Sort songs by timeAdded descending (newest at the top)
+        rawCatalog.sort((a, b) => {
+            const parseDate = (d) => {
+                if (!d) return 0;
+                const iso = d.includes('T') ? d : d.replace(' ', 'T');
+                const ts = new Date(iso).getTime();
+                return isNaN(ts) ? 0 : ts;
+            };
+            return parseDate(b.timeAdded) - parseDate(a.timeAdded);
+        });
+
+        // Normalize songs with auto-derived IDs and titles
+        catalog = rawCatalog.map((song, i) => ({
+            ...song,
+            title: getSongTitle(song),
+            id: getSongId(song, i),
+            artist: getSongArtist(song)
+        }));
+
+        // Default queue: newest to oldest (sorted catalog order)
+        defaultQueue = [...catalog];
+        queue = [...defaultQueue];
+
+        renderCatalog();
+        renderQueue();
+
+        if (queue.length > 0) {
+            loadTrack(0, false);
         }
     }
 
@@ -266,7 +308,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const lastSong = (currentIndex >= 0 && currentIndex < queue.length) ? queue[currentIndex] : null;
         let newQueue = shuffleArray(defaultQueue);
 
-        // Avoid playing the exact same song back-to-back if there are multiple songs
         if (lastSong && newQueue.length > 1 && newQueue[0].id === lastSong.id) {
             const swapIdx = Math.floor(Math.random() * (newQueue.length - 1)) + 1;
             [newQueue[0], newQueue[swapIdx]] = [newQueue[swapIdx], newQueue[0]];
@@ -285,19 +326,15 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Since queue reflects true order, the next song is always currentIndex + 1
         const nextIndex = currentIndex + 1;
         if (nextIndex < queue.length) {
             loadTrack(nextIndex, true);
         } else {
-            // At the end of the queue
             if (isShuffle) {
-                // If in shuffle mode at the end of the queue, re-randomize queue and play first song
                 reshuffleQueue();
             } else if (repeatMode === 'all') {
                 loadTrack(0, true);
             } else {
-                // Reached end of queue
                 currentHowl.stop();
                 updatePlayState(false);
                 stopSeekTimer();
@@ -312,7 +349,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (currentIndex >= queue.length - 1) {
             if (isShuffle) {
-                // If in shuffle mode at the end of the queue upon skip press, re-randomize queue and play first song
                 reshuffleQueue();
                 return;
             }
@@ -326,7 +362,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function playPrev() {
         if (queue.length === 0) return;
 
-        // If played more than 3 seconds, restart current song
         if (currentHowl && currentHowl.seek() > 3) {
             currentHowl.seek(0);
             return;
@@ -421,7 +456,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Shuffle Toggle: true order manipulation
-    // On: randomizes queue; Off: restores default order (newest to oldest)
     btnShuffle.addEventListener('click', () => {
         isShuffle = !isShuffle;
         btnShuffle.classList.toggle('active', isShuffle);
@@ -432,9 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentSong = currentIndex >= 0 ? queue[currentIndex] : null;
 
         if (isShuffle) {
-            // Re-order queue randomly
             if (currentSong) {
-                // Keep the current song playing at index 0 and randomize all other songs
                 const remaining = defaultQueue.filter(s => s.id !== currentSong.id);
                 queue = [currentSong, ...shuffleArray(remaining)];
                 currentIndex = 0;
@@ -443,7 +475,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentIndex = 0;
             }
         } else {
-            // Restore default order (newest to oldest)
             queue = [...defaultQueue];
             if (currentSong) {
                 currentIndex = queue.findIndex(s => s.id === currentSong.id);
@@ -521,12 +552,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const song = catalog.find(s => s.id === id);
             if (!song) return;
 
-            // Check if song already exists in queue
             const existingIndex = queue.findIndex(s => s.id === id);
             if (existingIndex !== -1) {
                 loadTrack(existingIndex, true);
             } else {
-                // Add right after current track and play
                 const insertAt = currentIndex >= 0 ? currentIndex + 1 : queue.length;
                 queue.splice(insertAt, 0, { ...song });
                 defaultQueue.push({ ...song });
@@ -579,7 +608,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const [item] = queue.splice(index, 1);
             queue.splice(targetIndex, 0, item);
 
-            // Update currentIndex pointer
             if (currentIndex === index) {
                 currentIndex = targetIndex;
             } else if (index < currentIndex && targetIndex >= currentIndex) {
@@ -603,32 +631,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetBtn.style.pointerEvents = 'none';
             }
 
-            console.log('[downloadSong] Attempting download:', { url, filename });
+            const isVCircle = url.includes('v%E5%85%9C%E5%9C%88.mp3');
 
             try {
-                const response = await fetch(url);
-                console.log('[downloadSong] Fetch response:', response.status, response.statusText);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                const blob = await response.blob();
-                console.log('[downloadSong] Blob size:', blob.size);
-                const blobUrl = URL.createObjectURL(blob);
-                const tempLink = document.createElement('a');
-                tempLink.href = blobUrl;
-                tempLink.download = `${filename}.mp3`;
-                document.body.appendChild(tempLink);
-                tempLink.click();
-                document.body.removeChild(tempLink);
-                setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
-
-                if (targetBtn) {
-                    targetBtn.innerHTML = '✓';
+                if (!isVCircle) {
+                    const response = await fetch(url);
+                    console.log('[downloadSong] Fetch response:', response.status, response.statusText);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const blob = await response.blob();
+                    console.log('[downloadSong] Blob size:', blob.size);
+                    const blobUrl = URL.createObjectURL(blob);
+                    const tempLink = document.createElement('a');
+                    tempLink.href = blobUrl;
+                    tempLink.download = `${filename}.mp3`;
+                    document.body.appendChild(tempLink);
+                    tempLink.click();
                     setTimeout(() => {
-                        targetBtn.innerHTML = originalContent;
-                        targetBtn.style.pointerEvents = '';
-                    }, 1200);
+                        document.body.removeChild(tempLink);
+                        URL.revokeObjectURL(blobUrl);
+                    }, 1500);
+
+                    if (targetBtn) {
+                        targetBtn.innerHTML = '✓';
+                        setTimeout(() => {
+                            targetBtn.innerHTML = originalContent;
+                            targetBtn.style.pointerEvents = '';
+                        }, 1200);
+                    }
+                    return;
                 }
+
+                // For v兜圈, skip fetch and go straight to direct fallback
+                throw new Error('Direct fallback for v兜圈');
             } catch (err) {
-                console.warn('[downloadSong] Direct blob download prevented (likely CORS). Falling back to direct URL:', err);
+                console.warn('[downloadSong] Using direct fallback:', err);
                 if (targetBtn) {
                     targetBtn.innerHTML = originalContent;
                     targetBtn.style.pointerEvents = '';
@@ -642,7 +678,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 tempLink.style.display = 'none';
                 document.body.appendChild(tempLink);
                 tempLink.click();
-                document.body.removeChild(tempLink);
+                setTimeout(() => {
+                    if (tempLink.parentNode) document.body.removeChild(tempLink);
+                }, 2000);
             }
         },
         downloadFromQueue(index, event, buttonEl) {
@@ -737,7 +775,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderCatalog() {
         if (!catalogList) return;
 
-        // Apply search filter if query is non-empty
         const filteredCatalog = searchQuery
             ? catalog.filter(song => song.title.toLowerCase().includes(searchQuery) || (song.artist && song.artist.toLowerCase().includes(searchQuery)))
             : catalog;
