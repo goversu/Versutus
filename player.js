@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const muteIcon = document.getElementById('mute-icon');
     const volumeBar = document.getElementById('volume-bar');
     const volumePercent = document.getElementById('volume-percent');
+    const btnShareCurrent = document.getElementById('btn-share-current');
     const stemControls = document.getElementById('stem-controls');
     const btnStemVocals = document.getElementById('btn-stem-vocals');
     const btnStemInstrumental = document.getElementById('btn-stem-instrumental');
@@ -148,6 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'versutus';
     }
 
+    function buildSongShareUrl(song) {
+        const baseUrl = window.location.href.split('#')[0].split('?')[0];
+        return `${baseUrl}?song=${encodeURIComponent(song.id || '')}`;
+    }
+
     // Shuffle helper (Fisher-Yates)
     function shuffleArray(arr) {
         const copy = [...arr];
@@ -196,8 +202,19 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCatalog();
         renderQueue();
 
+        const initialSongId = new URLSearchParams(window.location.search).get('song');
+        let autoPlayOnLoad = false;
+        let startIndex = 0;
+        if (initialSongId) {
+            autoPlayOnLoad = true;
+            const matchIndex = queue.findIndex(s => s.id === initialSongId);
+            if (matchIndex !== -1) {
+                startIndex = matchIndex;
+            }
+        }
+
         if (queue.length > 0) {
-            loadTrack(0, false);
+            loadTrack(startIndex, autoPlayOnLoad);
         }
     }
 
@@ -480,6 +497,16 @@ document.addEventListener('DOMContentLoaded', () => {
         updateAllVolumes();
     });
 
+    if (btnShareCurrent) {
+        btnShareCurrent.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (currentIndex >= 0 && queue[currentIndex]) {
+                window.player.shareSong(queue[currentIndex], e, btnShareCurrent);
+            }
+        });
+    }
+
     // Shuffle Toggle: true order manipulation
     btnShuffle.addEventListener('click', () => {
         isShuffle = !isShuffle;
@@ -708,11 +735,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const song = filteredCatalog[index];
             if (song) this.downloadSong(song.url, song.title, event, buttonEl);
         },
-        async shareSong(url, event, buttonEl) {
+        async shareSong(song, event, buttonEl) {
             if (event) {
                 event.preventDefault();
                 event.stopPropagation();
             }
+            const shareUrl = buildSongShareUrl(song);
             const targetBtn = buttonEl || (event ? event.currentTarget : null);
             const originalContent = targetBtn ? targetBtn.innerHTML : '';
             if (targetBtn) {
@@ -723,7 +751,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!navigator.clipboard || !navigator.clipboard.writeText) {
                     throw new Error('Clipboard API not supported');
                 }
-                await navigator.clipboard.writeText(url);
+                await navigator.clipboard.writeText(shareUrl);
                 if (targetBtn) {
                     setTimeout(() => {
                         targetBtn.innerHTML = originalContent;
@@ -736,19 +764,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     targetBtn.innerHTML = originalContent;
                     targetBtn.style.pointerEvents = '';
                 }
-                window.prompt('Copy this link to share:', url);
+                window.prompt('Copy this link to share:', shareUrl);
             }
         },
         shareFromQueue(index, event, buttonEl) {
             const song = queue[index];
-            if (song) this.shareSong(song.url, event, buttonEl);
+            if (song) this.shareSong(song, event, buttonEl);
         },
         shareFromCatalog(index, event, buttonEl) {
             const filteredCatalog = searchQuery
                 ? catalog.filter(song => song.title.toLowerCase().includes(searchQuery) || (song.artist && song.artist.toLowerCase().includes(searchQuery)))
                 : catalog;
             const song = filteredCatalog[index];
-            if (song) this.shareSong(song.url, event, buttonEl);
+            if (song) this.shareSong(song, event, buttonEl);
         },
         playFromCatalogIndex(index) {
             const filteredCatalog = searchQuery
