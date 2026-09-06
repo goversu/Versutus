@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
             'queue-clear': 'clear',
             'queue-add-all': 'queue all',
             'no-song-playing': 'no track playing',
+            'stems': 'stems',
+            'stem-vocals': 'vocals',
+            'stem-instrumental': 'instrumental',
             'intro-wonderstruck': 'wonderstruck',
             'intro-musician': 'musician',
             'intro-portfolio': 'portfolio manager',
@@ -65,6 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
             'queue-clear': '清空',
             'queue-add-all': '全部加入队列',
             'no-song-playing': '未在播放曲目',
+            'stems': '分轨',
+            'stem-vocals': '人声',
+            'stem-instrumental': '伴奏',
             'intro-wonderstruck': 'wonderstruck',
             'intro-musician': '音乐人',
             'intro-portfolio': '投资经理',
@@ -113,6 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
             'queue-clear': '清空',
             'queue-add-all': '全部加入佇列',
             'no-song-playing': '未在播放曲目',
+            'stems': '分軌',
+            'stem-vocals': '人聲',
+            'stem-instrumental': '伴奏',
             'intro-wonderstruck': 'wonderstruck',
             'intro-musician': '音樂人',
             'intro-portfolio': '投資經理',
@@ -331,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
         footer.style.flexWrap = 'wrap';
 
         const versionSpan = document.createElement('span');
-        versionSpan.textContent = 'last update: 2026-09-06 22:43 (UTC+8)';
+        versionSpan.textContent = 'last update: 2026-09-06 22:48 (UTC+8)';
         versionSpan.style.fontSize = '0.7em';
         versionSpan.style.opacity = '0.7';
         versionSpan.style.display = 'block';
