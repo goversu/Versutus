@@ -830,30 +830,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/'/g, '&#039;');
     }
 
-    // Add site version text at the bottom of the footer
-    function addSiteVersion() {
-        const footer = document.querySelector('footer');
-        if (!footer) return;
-        if (document.getElementById('site-version')) return;
-
-        // Ensure the footer can wrap its flex items.
-        // This puts the version on its own line below the profile links.
-        footer.style.flexWrap = 'wrap';
-
-        const versionSpan = document.createElement('span');
-        versionSpan.textContent = 'last update: 2026-09-06 20:43 (UTC+8)';
-        versionSpan.style.fontSize = '0.7em';
-        versionSpan.style.opacity = '0.7';
-        versionSpan.style.display = 'block';
-        versionSpan.style.textAlign = 'center';
-        versionSpan.style.flexBasis = '100%';
-        versionSpan.style.width = '100%';
-        versionSpan.style.marginTop = '5px';
-        versionSpan.id = 'site-version';
-        footer.appendChild(versionSpan);
-    }
-
     // Start loading
     loadCatalog();
-    addSiteVersion();
 });
