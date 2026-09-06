@@ -552,6 +552,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
             renderQueue();
         },
+        async downloadSong(url, filename, event, buttonEl) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            const targetBtn = buttonEl || (event ? event.currentTarget : null);
+            const originalContent = targetBtn ? targetBtn.innerHTML : '';
+            if (targetBtn) {
+                targetBtn.innerHTML = '⌛';
+                targetBtn.style.pointerEvents = 'none';
+            }
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                const tempLink = document.createElement('a');
+                tempLink.href = blobUrl;
+                tempLink.download = `${filename}.mp3`;
+                document.body.appendChild(tempLink);
+                tempLink.click();
+                document.body.removeChild(tempLink);
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+
+                if (targetBtn) {
+                    targetBtn.innerHTML = '✓';
+                    setTimeout(() => {
+                        targetBtn.innerHTML = originalContent;
+                        targetBtn.style.pointerEvents = '';
+                    }, 1200);
+                }
+            } catch (err) {
+                console.warn('Direct blob download prevented (likely CORS). Falling back to direct URL:', err);
+                if (targetBtn) {
+                    targetBtn.innerHTML = originalContent;
+                    targetBtn.style.pointerEvents = '';
+                }
+                const tempLink = document.createElement('a');
+                tempLink.href = url;
+                tempLink.target = '_blank';
+                tempLink.rel = 'noopener';
+                document.body.appendChild(tempLink);
+                tempLink.click();
+                document.body.removeChild(tempLink);
+            }
+        },
         clearQueue() {
             queue = [];
             defaultQueue = [];
@@ -603,7 +651,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     <div class="item-actions" onclick="event.stopPropagation()">
-                        <a href="${song.url}" download="${escapeHtml(song.title)}.mp3" class="icon-action-btn download-btn" title="Download" target="_blank" rel="noopener">⤓</a>
+                        <button class="icon-action-btn download-btn" title="Download" onclick="window.player.downloadSong('${song.url}', '${escapeHtml(song.title)}', event, this)">⤓</button>
                         <button class="icon-action-btn" title="Move Up" ${i === 0 ? 'disabled' : ''} onclick="window.player.moveQueueItem(${i}, -1, event)">▲</button>
                         <button class="icon-action-btn" title="Move Down" ${i === queue.length - 1 ? 'disabled' : ''} onclick="window.player.moveQueueItem(${i}, 1, event)">▼</button>
                         <button class="icon-action-btn delete-btn" title="Remove" onclick="window.player.removeFromQueue(${i}, event)">✕</button>
@@ -653,9 +701,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button class="action-btn add-btn" title="Add to queue" onclick="window.player.addToQueue('${song.id}')">
                             + queue
                         </button>
-                        <a href="${song.url}" download="${escapeHtml(song.title)}.mp3" class="action-btn download-btn" target="_blank" rel="noopener" title="Download song">
+                        <button class="action-btn download-btn" title="Download song" onclick="window.player.downloadSong('${song.url}', '${escapeHtml(song.title)}', event, this)">
                             ⤓
-                        </a>
+                        </button>
                     </div>
                 </div>
             `;
