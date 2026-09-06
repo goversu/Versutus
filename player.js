@@ -691,9 +691,20 @@ document.addEventListener('DOMContentLoaded', () => {
             if (song) this.addToQueue(song.id);
         },
         clearQueue() {
-            queue = [];
-            defaultQueue = [];
-            resetPlayerDisplay();
+            if (currentIndex === -1 || currentIndex >= queue.length) {
+                queue = [];
+                defaultQueue = [];
+                resetPlayerDisplay();
+                return;
+            }
+
+            const currentSong = queue[currentIndex];
+            queue = [currentSong];
+            defaultQueue = [currentSong];
+            currentIndex = 0;
+
+            // Do not stop the current track; just update the visible queue.
+            renderQueue();
         },
         queueAll() {
             catalog.forEach(song => {
@@ -708,10 +719,18 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (btnClearQueue) {
-        btnClearQueue.addEventListener('click', () => window.player.clearQueue());
+        btnClearQueue.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            window.player.clearQueue();
+        });
     }
     if (btnQueueAll) {
-        btnQueueAll.addEventListener('click', () => window.player.queueAll());
+        btnQueueAll.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            window.player.queueAll();
+        });
     }
 
     // Render Play Queue UI
