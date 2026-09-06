@@ -661,26 +661,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                // For v兜圈, skip fetch and go straight to direct fallback
+                // For v兜圈, skip fetch and go straight to fallback
                 throw new Error('Direct fallback for v兜圈');
             } catch (err) {
-                console.warn('[downloadSong] Using direct fallback:', err);
+                console.warn('[downloadSong] Falling back to opening in new tab:', err);
                 if (targetBtn) {
                     targetBtn.innerHTML = originalContent;
                     targetBtn.style.pointerEvents = '';
                 }
-
-                const fallbackUrl = url + (url.includes('?') ? '&' : '?') + 'response-content-disposition=attachment';
-                console.log('[downloadSong] Fallback URL:', fallbackUrl);
-                const tempLink = document.createElement('a');
-                tempLink.href = fallbackUrl;
-                tempLink.download = `${filename}.mp3`;
-                tempLink.style.display = 'none';
-                document.body.appendChild(tempLink);
-                tempLink.click();
-                setTimeout(() => {
-                    if (tempLink.parentNode) document.body.removeChild(tempLink);
-                }, 2000);
+                // Open the MP3 in a new tab instead of forcing download
+                window.open(url, '_blank', 'noopener,noreferrer');
             }
         },
         downloadFromQueue(index, event, buttonEl) {

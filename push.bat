@@ -1,9 +1,12 @@
 @echo off
 SETLOCAL EnableDelayedExpansion
 
+:: Change to the directory containing this batch file
+cd /d "%~dp0"
+
 :: Ensure git is accessible even if PATH hasn't refreshed in the current session
 where git >nul 2>nul
-if %ERRORLEVEL% neq 0 (
+if errorlevel 1 (
     if exist "C:\Program Files\Git\cmd\git.exe" (
         SET "PATH=%PATH%;C:\Program Files\Git\cmd"
     ) else (
@@ -17,7 +20,7 @@ if %ERRORLEVEL% neq 0 (
 SET BRANCH=main
 
 echo Checking for changes...
-git add .
+git add -A
 
 :: Check if there are staged changes to commit
 git diff --cached --quiet
