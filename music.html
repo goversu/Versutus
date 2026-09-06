@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>versutus - music</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+    <script src="scripts.js" defer></script>
+    <script src="player.js" defer></script>
+</head>
+<body>
+<header>
+    <nav>
+        <a href="index.html" data-i18n="nav-home">versutus</a>
+        <a href="commission.html" data-i18n="nav-commission">commission</a>
+        <a href="music.html" class="active-nav" data-i18n="nav-music">music</a>
+        <select id="language-selector">
+            <option value="en">english</option>
+            <option value="zh-Hans">简体中文</option>
+            <option value="zh-Hant">繁體中文</option>
+        </select>
+    </nav>
+</header>
+
+<div class="container">
+    <section class="music-section">
+        <h2 data-i18n="music-title">music</h2>
+
+        <!-- Main Player Card -->
+        <div class="player-card">
+            <div class="player-track-info">
+                <div class="track-visual-disc" id="player-disc">
+                    <span class="disc-hole"></span>
+                </div>
+                <div class="track-details">
+                    <div class="track-title" id="player-title" data-i18n="no-song-playing">no track playing</div>
+                    <div class="track-artist" id="player-artist">versutus</div>
+                </div>
+            </div>
+
+            <!-- Scrubber / Timeline -->
+            <div class="player-timeline">
+                <span id="current-time">0:00</span>
+                <input type="range" id="seek-bar" min="0" max="100" value="0" step="0.1" aria-label="Seek time">
+                <span id="total-duration">0:00</span>
+            </div>
+
+            <!-- Main Controls -->
+            <div class="player-controls">
+                <button id="btn-shuffle" class="control-btn" title="Shuffle" aria-label="Shuffle">
+                    <span class="btn-icon">🔀</span>
+                </button>
+
+                <button id="btn-prev" class="control-btn" title="Previous" aria-label="Previous track">
+                    <span class="btn-icon">⏮</span>
+                </button>
+
+                <button id="btn-play" class="control-btn play-main-btn" title="Play / Pause" aria-label="Play or Pause">
+                    <span class="btn-icon" id="play-icon">▶</span>
+                </button>
+
+                <button id="btn-next" class="control-btn" title="Next" aria-label="Next track">
+                    <span class="btn-icon">⏭</span>
+                </button>
+
+                <button id="btn-repeat" class="control-btn" title="Repeat (off)" aria-label="Repeat mode">
+                    <span class="btn-icon" id="repeat-icon">🔁</span>
+                    <span class="repeat-mode-badge" id="repeat-badge"></span>
+                </button>
+            </div>
+
+            <!-- Volume Bar -->
+            <div class="player-volume">
+                <button id="btn-mute" class="volume-btn" title="Mute" aria-label="Mute or unmute">
+                    <span id="mute-icon">🔊</span>
+                </button>
+                <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="0.8" aria-label="Volume">
+                <span id="volume-percent">80%</span>
+            </div>
+        </div>
+
+        <!-- Play Queue Section -->
+        <div class="playlist-container">
+            <div class="section-subhead">
+                <h3 data-i18n="queue-title">play queue</h3>
+                <div class="queue-actions">
+                    <button id="btn-clear-queue" class="mini-btn" data-i18n="queue-clear">clear</button>
+                </div>
+            </div>
+            <div id="queue-list" class="queue-list">
+                <!-- Dynamically rendered queue items -->
+            </div>
+        </div>
+
+        <!-- Catalog / All Songs Section -->
+        <div class="playlist-container">
+            <div class="section-subhead">
+                <h3 data-i18n="catalog-title">all songs</h3>
+                <button id="btn-queue-all" class="mini-btn" data-i18n="queue-add-all">queue all</button>
+            </div>
+            <div id="catalog-list" class="catalog-list">
+                <!-- Dynamically rendered catalog items -->
+            </div>
+        </div>
+    </section>
+</div>
+
+<footer>
+    <div class="profile-links">
+        <a href="https://www.youtube.com/Versutus" target="_blank">youtube</a>
+        <a href="https://music.apple.com/us/artist/versutus/1494564528" target="_blank">apple music</a>
+        <a href="https://open.spotify.com/artist/4TxIpp0lzeQxsZqFjlKDZQ" target="_blank">spotify</a>
+        <button id="email-button" class="email-button">versutus0@gmail.com</button>
+    </div>
+</footer>
+
+</body>
+</html>

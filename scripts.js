@@ -4,7 +4,15 @@ document.addEventListener('DOMContentLoaded', () => {
         'en': {
             'nav-home': 'versutus',
             'nav-commission': 'commission',
+            'nav-music': 'music',
             'nav-downloads': 'downloads',
+            'music-title': 'music',
+            'queue-title': 'play queue',
+            'catalog-title': 'all songs',
+            'queue-empty': 'queue is empty',
+            'queue-clear': 'clear',
+            'queue-add-all': 'queue all',
+            'no-song-playing': 'no track playing',
             'intro-wonderstruck': 'wonderstruck',
             'intro-musician': 'musician',
             'intro-portfolio': 'portfolio manager',
@@ -40,7 +48,15 @@ document.addEventListener('DOMContentLoaded', () => {
         'zh-Hans': {
             'nav-home': 'versutus',
             'nav-commission': '委托',
+            'nav-music': '音乐',
             'nav-downloads': '下载',
+            'music-title': '音乐',
+            'queue-title': '播放队列',
+            'catalog-title': '所有曲目',
+            'queue-empty': '队列为空',
+            'queue-clear': '清空',
+            'queue-add-all': '全部加入队列',
+            'no-song-playing': '未在播放曲目',
             'intro-wonderstruck': 'wonderstruck',
             'intro-musician': '音乐人',
             'intro-portfolio': '投资经理',
@@ -76,7 +92,15 @@ document.addEventListener('DOMContentLoaded', () => {
         'zh-Hant': {
             'nav-home': 'versutus',
             'nav-commission': '委託',
+            'nav-music': '音樂',
             'nav-downloads': '下載',
+            'music-title': '音樂',
+            'queue-title': '播放佇列',
+            'catalog-title': '所有曲目',
+            'queue-empty': '佇列為空',
+            'queue-clear': '清空',
+            'queue-add-all': '全部加入佇列',
+            'no-song-playing': '未在播放曲目',
             'intro-wonderstruck': 'wonderstruck',
             'intro-musician': '音樂人',
             'intro-portfolio': '投資經理',
@@ -115,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('versutus-lang', lang);
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
-            if (translations[lang][key]) {
+            if (translations[lang] && translations[lang][key]) {
                 if (el.tagName === 'INPUT' && (el.type === 'button' || el.type === 'submit')) {
                     el.value = translations[lang][key];
                 } else {
@@ -125,6 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         document.documentElement.lang = lang;
     }
+    window.applyTranslations = () => setLanguage(localStorage.getItem('versutus-lang') || 'en');
 
     const savedLang = localStorage.getItem('versutus-lang') || 'en';
     const langSelector = document.getElementById('language-selector');
