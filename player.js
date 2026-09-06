@@ -840,7 +840,7 @@ document.addEventListener('DOMContentLoaded', () => {
         footer.style.flexWrap = 'wrap';
 
         const versionSpan = document.createElement('span');
-        versionSpan.textContent = `last update: ${new Date().toISOString().slice(0, 19).replace('T', ' ')}`;
+        versionSpan.textContent = `last update: ${new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString().slice(0, 19).replace('T', ' ')}`;
         versionSpan.style.fontSize = '0.7em';
         versionSpan.style.opacity = '0.7';
         versionSpan.style.display = 'block';
