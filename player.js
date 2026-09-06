@@ -890,8 +890,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ['vocals', 'instrumental'].forEach(type => {
             const stem = stemHowls[type];
             if (!stem) return;
+            stem.seek(pos);
             if (!stem.playing()) {
-                stem.seek(pos);
                 stem.play();
             }
             stem.volume(getStemVolume(type));
