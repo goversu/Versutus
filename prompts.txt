@@ -1,3 +1,19 @@
+there still aren't any toggle buttons visible when the song "p paradice" is playing. can we do some debugging? tell me what to open and what you need to see
+the new update time is 22:43 6/9/2026
+
+i don't see the stem toggle buttons for the song "p paradice"
+in addition, update the last update time to 22:39 6/9/2026
+
+22:39 6/9/2026
+
+i want to get 2 things done:
+1, i want to make a new file, a batch or python script that makes it convenient for me to add new songs to the catalog. it should just take in a link and ask questions to fill in the rest (include whether it's a normal song, isolated vocals, or instrumental), but set defaults for if the user enters nothing
+2, i want to add an ambitious new feature. for certain songs, i want a stem toggle feature where users can toggle vocal on and off, and instrumental on and off. if this feature is enabled and 3 files for the normal, isolated vocals, and instrumental of a song are uploaded, 2 buttons will appear in the playback interface, vocals, and instrumental. by default both are on, and the normal audio file plays. cache all 3 files if the song supports stem toggle. if the user toggles vocals or inst off, the normal version shuts off and the exact timestamp of the appropriate file (the other stem) starts playing seamlessly. if the user toggles the stem back on, instead of switching back to the normal version, unmute the stem so that both are playing simultaneously and use a javascript hard limiter to clip the audio at 0dB. if the user toggles both stems off there should be silence.
+let's start this implementation with the song "p paradice.mp3", with the isolated vocals being https://pub-a277c8d4ae8148c6a7cd515084eb58f1.r2.dev/p%20iso%20paradice_2.mp3, and the instrumental being https://pub-a277c8d4ae8148c6a7cd515084eb58f1.r2.dev/p%20inst%20paradice_2.mp3 
+
+
+22:17 6/9/2026
+
 let's make the time precise to only minutes then. it's 20:43 6/9/2026 right now
 
 20:40 6/9/2026
