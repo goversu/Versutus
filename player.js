@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const title = getSongTitle(song);
         const slug = title.toLowerCase()
-            .replace(/[^a-z0-9_-]/g, '-')
+            .replace(/[^\p{Letter}\p{Number}_-]/gu, '-')
             .replace(/-+/g, '-')
             .replace(/^-|-$/g, '');
         return slug || `track-${index + 1}`;
@@ -111,6 +111,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const rawCatalog = await res.json();
             
+            // Sort songs by timeAdded descending (newest at the top)
+            rawCatalog.sort((a, b) => {
+                const parseDate = (d) => {
+                    if (!d) return 0;
+                    const iso = d.includes('T') ? d : d.replace(' ', 'T');
+                    const ts = new Date(iso).getTime();
+                    return isNaN(ts) ? 0 : ts;
+                };
+                return parseDate(b.timeAdded) - parseDate(a.timeAdded);
+            });
+
             // Normalize songs with auto-derived IDs and titles
             catalog = rawCatalog.map((song, i) => ({
                 ...song,
@@ -119,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 artist: getSongArtist(song)
             }));
             
-            // Default queue: newest to oldest (catalog order)
+            // Default queue: newest to oldest (sorted catalog order)
             defaultQueue = [...catalog];
             queue = [...defaultQueue];
             
