@@ -1,3 +1,5 @@
+let's try to implement a feature where the user can also share songs via a link. update time 07:47 7/9/2026
+
 the bug persists, when the song is allowed to repeat itself on repeat mode, the 2nd time it plays is silent, and i have to toggle a stem on and off to hear sound again. update time 22:58 6/9/2026
 
 let's fix a bug where, if on repeat, the song mutes entirely after a stem has been toggled on and off and the song repeats. i'm wondering if we can just play all 3 at the start, and just mute the normal version and stem when the user clicks. the update time is 22:54 6/9/2026
