@@ -250,6 +250,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.applyTranslations) window.applyTranslations();
     }
 
+    // Re-randomize queue at end of shuffle and play first song
+    function reshuffleQueue() {
+        const lastSong = (currentIndex >= 0 && currentIndex < queue.length) ? queue[currentIndex] : null;
+        let newQueue = shuffleArray(defaultQueue);
+
+        // Avoid playing the exact same song back-to-back if there are multiple songs
+        if (lastSong && newQueue.length > 1 && newQueue[0].id === lastSong.id) {
+            const swapIdx = Math.floor(Math.random() * (newQueue.length - 1)) + 1;
+            [newQueue[0], newQueue[swapIdx]] = [newQueue[swapIdx], newQueue[0]];
+        }
+
+        queue = newQueue;
+        renderQueue();
+        loadTrack(0, true);
+    }
+
     // Track progression logic (true order)
     function handleTrackEnd() {
         if (repeatMode === 'one') {
@@ -263,7 +279,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (nextIndex < queue.length) {
             loadTrack(nextIndex, true);
         } else {
-            if (repeatMode === 'all') {
+            // At the end of the queue
+            if (isShuffle) {
+                // If in shuffle mode at the end of the queue, re-randomize queue and play first song
+                reshuffleQueue();
+            } else if (repeatMode === 'all') {
                 loadTrack(0, true);
             } else {
                 // Reached end of queue
@@ -278,11 +298,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function playNext() {
         if (queue.length === 0) return;
-        let nextIndex = currentIndex + 1;
-        if (nextIndex >= queue.length) {
-            nextIndex = 0;
+
+        if (currentIndex >= queue.length - 1) {
+            if (isShuffle) {
+                // If in shuffle mode at the end of the queue upon skip press, re-randomize queue and play first song
+                reshuffleQueue();
+                return;
+            }
+            loadTrack(0, true);
+            return;
         }
-        loadTrack(nextIndex, true);
+
+        loadTrack(currentIndex + 1, true);
     }
 
     function playPrev() {
