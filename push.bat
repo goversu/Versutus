@@ -21,8 +21,8 @@ git add .
 
 :: Check if there are staged changes to commit
 git diff --cached --quiet
-if %ERRORLEVEL% neq 0 (
-    SET msg=Auto-commit %date% %time%
+if errorlevel 1 (
+    SET "msg=Auto-commit %date% %time%"
     echo Committing changes: !msg!
     git commit -m "!msg!"
     
