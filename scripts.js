@@ -331,7 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
         footer.style.flexWrap = 'wrap';
 
         const versionSpan = document.createElement('span');
-        versionSpan.textContent = 'last update: 2026-09-06 22:39 (UTC+8)';
+        versionSpan.textContent = 'last update: 2026-09-06 22:43 (UTC+8)';
         versionSpan.style.fontSize = '0.7em';
         versionSpan.style.opacity = '0.7';
         versionSpan.style.display = 'block';

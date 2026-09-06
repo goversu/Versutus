@@ -51,7 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       {
         "url": "https://pub-a277c8d4ae8148c6a7cd515084eb58f1.r2.dev/p%20paradice.mp3",
-        "timeAdded": "2026-09-06 13:00:00"
+        "timeAdded": "2026-09-06 13:00:00",
+        "stems": {
+          "vocals": "https://pub-a277c8d4ae8148c6a7cd515084eb58f1.r2.dev/p%20iso%20paradice_2.mp3",
+          "instrumental": "https://pub-a277c8d4ae8148c6a7cd515084eb58f1.r2.dev/p%20inst%20paradice_2.mp3"
+        }
       },
       {
         "url": "https://pub-a277c8d4ae8148c6a7cd515084eb58f1.r2.dev/p%20sennichite_9.mp3",
