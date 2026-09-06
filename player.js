@@ -627,6 +627,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.removeChild(tempLink);
             }
         },
+        downloadFromQueue(index, event, buttonEl) {
+            const song = queue[index];
+            if (song) this.downloadSong(song.url, song.title, event, buttonEl);
+        },
+        downloadFromCatalog(index, event, buttonEl) {
+            const filteredCatalog = searchQuery
+                ? catalog.filter(song => song.title.toLowerCase().includes(searchQuery) || (song.artist && song.artist.toLowerCase().includes(searchQuery)))
+                : catalog;
+            const song = filteredCatalog[index];
+            if (song) this.downloadSong(song.url, song.title, event, buttonEl);
+        },
+        playFromCatalogIndex(index) {
+            const filteredCatalog = searchQuery
+                ? catalog.filter(song => song.title.toLowerCase().includes(searchQuery) || (song.artist && song.artist.toLowerCase().includes(searchQuery)))
+                : catalog;
+            const song = filteredCatalog[index];
+            if (song) this.playFromCatalog(song.id);
+        },
+        addToQueueIndex(index) {
+            const filteredCatalog = searchQuery
+                ? catalog.filter(song => song.title.toLowerCase().includes(searchQuery) || (song.artist && song.artist.toLowerCase().includes(searchQuery)))
+                : catalog;
+            const song = filteredCatalog[index];
+            if (song) this.addToQueue(song.id);
+        },
         clearQueue() {
             queue = [];
             defaultQueue = [];
@@ -678,7 +703,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     <div class="item-actions" onclick="event.stopPropagation()">
-                        <button class="icon-action-btn download-btn" title="Download" onclick="window.player.downloadSong('${song.url}', '${escapeHtml(song.title)}', event, this)">⤓</button>
+                        <button class="icon-action-btn download-btn" title="Download" onclick="window.player.downloadFromQueue(${i}, event, this)">⤓</button>
                         <button class="icon-action-btn" title="Move Up" ${i === 0 ? 'disabled' : ''} onclick="window.player.moveQueueItem(${i}, -1, event)">▲</button>
                         <button class="icon-action-btn" title="Move Down" ${i === queue.length - 1 ? 'disabled' : ''} onclick="window.player.moveQueueItem(${i}, 1, event)">▼</button>
                         <button class="icon-action-btn delete-btn" title="Remove" onclick="window.player.removeFromQueue(${i}, event)">✕</button>
@@ -714,7 +739,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isCurrent = currentIndex >= 0 && queue[currentIndex] && queue[currentIndex].id === song.id;
             return `
                 <div class="catalog-item ${isCurrent ? 'active' : ''}">
-                    <div class="item-left" onclick="window.player.playFromCatalog('${song.id}')">
+                    <div class="item-left" onclick="window.player.playFromCatalogIndex(${i})">
                         <span class="item-index">${i + 1}</span>
                         <div class="item-info">
                             <span class="item-title">${escapeHtml(song.title)}</span>
@@ -722,13 +747,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     <div class="item-actions">
-                        <button class="action-btn play-btn" onclick="window.player.playFromCatalog('${song.id}')">
+                        <button class="action-btn play-btn" onclick="window.player.playFromCatalogIndex(${i})">
                             ${isCurrent && isPlaying ? '⏸' : '▶'}
                         </button>
-                        <button class="action-btn add-btn" title="Add to queue" onclick="window.player.addToQueue('${song.id}')">
+                        <button class="action-btn add-btn" title="Add to queue" onclick="window.player.addToQueueIndex(${i})">
                             + queue
                         </button>
-                        <button class="action-btn download-btn" title="Download song" onclick="window.player.downloadSong('${song.url}', '${escapeHtml(song.title)}', event, this)">
+                        <button class="action-btn download-btn" title="Download song" onclick="window.player.downloadFromCatalog(${i}, event, this)">
                             ⤓
                         </button>
                     </div>
