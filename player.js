@@ -150,9 +150,27 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'versutus';
     }
 
+    function getCurrentSong() {
+        return (currentIndex >= 0 && currentIndex < queue.length) ? queue[currentIndex] : null;
+    }
+
     function buildSongShareUrl(song) {
         const baseUrl = window.location.href.split('#')[0].split('?')[0];
         return `${baseUrl}?song=${encodeURIComponent(song.id || '')}`;
+    }
+
+    function updateNowPlayingUrl() {
+        if (!window.history || !window.history.replaceState) return;
+
+        const currentSong = getCurrentSong();
+        const songParam = currentSong ? `?song=${encodeURIComponent(currentSong.id)}` : '';
+        const newUrl = `${window.location.pathname}${songParam}${window.location.hash}`;
+
+        try {
+            window.history.replaceState(null, '', newUrl);
+        } catch (e) {
+            console.warn('[updateNowPlayingUrl] Failed to update URL:', e);
+        }
     }
 
     // Shuffle helper (Fisher-Yates)
@@ -236,6 +254,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentIndex = index;
         const song = queue[currentIndex];
+
+        updateNowPlayingUrl();
 
         // Update UI info
         playerTitle.removeAttribute('data-i18n');
@@ -334,6 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentTimeEl.textContent = '0:00';
         totalDurationEl.textContent = '0:00';
         seekBar.value = 0;
+        updateNowPlayingUrl();
         renderQueue();
         renderCatalog();
         if (window.applyTranslations) window.applyTranslations();
@@ -942,7 +963,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getStemVolume(type) {
-        if (!usingStems) return 0;
+        if (!usingStems || !stemHowls[type]) return 0;
         const shouldPlay = stemToggles[type] && !isMuted;
         return shouldPlay ? getEffectiveVolume() : 0;
     }
@@ -951,6 +972,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const effVol = getEffectiveVolume();
         if (currentHowl) {
             currentHowl.volume(usingStems ? 0 : effVol);
+        }
+
+        if (usingStems) {
+            ensureStemsForCurrentSong();
         }
 
         ['vocals', 'instrumental'].forEach(type => {
@@ -972,6 +997,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function startStemsIfNeeded() {
         if (!usingStems) return;
         if (!currentHowl || !currentHowl.playing()) return;
+        ensureStemsForCurrentSong();
         const pos = currentHowl.seek() || 0;
         ['vocals', 'instrumental'].forEach(type => {
             const stem = stemHowls[type];
@@ -997,6 +1023,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function syncAndResumeStems() {
         if (!usingStems) return;
+        ensureStemsForCurrentSong();
         const pos = currentHowl ? (currentHowl.seek() || 0) : 0;
         Object.keys(stemHowls).forEach(type => {
             const stem = stemHowls[type];
@@ -1037,25 +1064,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!hasStems) {
             updateStemControlsVisibility(false);
+            updateStemButtonState();
             return;
         }
 
-        stemHowls.vocals = new Howl({
-            src: [song.stems.vocals],
-            html5: true,
-            preload: true,
-            volume: 0
-        });
-
-        stemHowls.instrumental = new Howl({
-            src: [song.stems.instrumental],
-            html5: true,
-            preload: true,
-            volume: 0
-        });
-
         updateStemControlsVisibility(true);
         updateStemButtonState();
+    }
+
+    function ensureStemsForCurrentSong() {
+        const song = getCurrentSong();
+        if (!song || !song.stems || !song.stems.vocals || !song.stems.instrumental) return;
+
+        if (!stemHowls.vocals) {
+            stemHowls.vocals = new Howl({
+                src: [song.stems.vocals],
+                html5: true,
+                preload: true,
+                volume: 0
+            });
+        }
+
+        if (!stemHowls.instrumental) {
+            stemHowls.instrumental = new Howl({
+                src: [song.stems.instrumental],
+                html5: true,
+                preload: true,
+                volume: 0
+            });
+        }
     }
 
     function updateStemControlsVisibility(show) {
@@ -1077,10 +1114,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function toggleStem(type) {
         if (!currentHowl) return;
+        const song = getCurrentSong();
+        if (!song || !song.stems || !song.stems.vocals || !song.stems.instrumental) return;
+
         stemMixEngaged = true;
         if (!usingStems) {
             usingStems = true;
         }
+        ensureStemsForCurrentSong();
         stemToggles[type] = !stemToggles[type];
         updateAllVolumes();
         startStemsIfNeeded();
