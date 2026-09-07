@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let searchQuery = '';
     let stemHowls = { vocals: null, instrumental: null };
     let usingStems = false;
+    let stemMixEngaged = false; // session-level flag: once user interacts with stem controls, stays true
     let stemToggles = { vocals: true, instrumental: true };
 
     // Embedded fallback catalog for local file:// usage
@@ -1026,21 +1027,18 @@ document.addEventListener('DOMContentLoaded', () => {
             stemHowls.instrumental = null;
         }
         usingStems = false;
-        stemToggles = { vocals: true, instrumental: true };
         updateStemControlsVisibility(false);
         updateStemButtonState();
     }
 
     function setupStemsForCurrentSong(song) {
         const hasStems = song.stems && song.stems.vocals && song.stems.instrumental;
+        usingStems = stemMixEngaged && hasStems;
+
         if (!hasStems) {
-            usingStems = false;
             updateStemControlsVisibility(false);
             return;
         }
-
-        usingStems = false;
-        stemToggles = { vocals: true, instrumental: true };
 
         stemHowls.vocals = new Howl({
             src: [song.stems.vocals],
@@ -1079,6 +1077,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function toggleStem(type) {
         if (!currentHowl) return;
+        stemMixEngaged = true;
         if (!usingStems) {
             usingStems = true;
         }
