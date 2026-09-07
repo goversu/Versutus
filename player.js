@@ -232,6 +232,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (matchIndex !== -1) {
                 startIndex = matchIndex;
             }
+
+            // Deep-link playback should always start with a clean stem mix,
+            // regardless of any stale session state.
+            stemMixEngaged = false;
+            usingStems = false;
         }
 
         if (queue.length > 0) {

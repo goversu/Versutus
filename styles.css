@@ -597,14 +597,6 @@ footer {
     background-color: #13233a;
 }
 
-@media (hover: hover) and (pointer: fine) {
-    .stem-btn:hover {
-        background-color: #222;
-        border-color: #666;
-        color: #fff;
-    }
-}
-
 .stem-btn:active {
     background-color: #222;
     border-color: #666;
