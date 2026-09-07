@@ -1,3 +1,68 @@
+i hear all 3 audio files playing at max volume when i open file:///C:/V/Commands/python/Versutus-main/music.html?song=p-paradice
+will this help the diagnosis? this is the console log
+Access to fetch at 'file:///C:/V/Commands/python/Versutus-main/catalog.json' from origin 'null' has been blocked by CORS policy: Cross origin requests are only supported for protocol schemes: brave, chrome, chrome-extension, chrome-untrusted, data, http, https, isolated-app.
+player.js:191  GET file:///C:/V/Commands/python/Versutus-main/catalog.json net::ERR_FAILED
+loadCatalog @ player.js:191
+(anonymous) @ player.js:1165
+player.js:195 Failed to fetch catalog.json, using embedded fallback catalog: TypeError: Failed to fetch
+    at loadCatalog (player.js:191:31)
+    at HTMLDocument.<anonymous> (player.js:1165:5)
+loadCatalog @ player.js:195
+await in loadCatalog
+(anonymous) @ player.js:1165
+howler.min.js:2 HTML5 Audio pool exhausted, returning potentially locked audio object.
+(anonymous) @ howler.min.js:2
+Promise.catch
+_obtainHtml5Audio @ howler.min.js:2
+create @ howler.min.js:2
+init @ howler.min.js:2
+(anonymous) @ howler.min.js:4
+t @ howler.min.js:2
+load @ howler.min.js:2
+init @ howler.min.js:2
+(anonymous) @ howler.min.js:4
+o @ howler.min.js:2
+loadTrack @ player.js:284
+loadCatalog @ player.js:243
+await in loadCatalog
+(anonymous) @ player.js:1165
+player.js:318 Audio play error (waiting for user interaction): Playback was unable to start. This is most commonly an issue on mobile devices and Chrome where playback was not within a user interaction.
+onplayerror @ player.js:318
+(anonymous) @ howler.min.js:2
+setTimeout
+_emit @ howler.min.js:2
+h @ howler.min.js:2
+play @ howler.min.js:2
+action @ howler.min.js:2
+_loadQueue @ howler.min.js:2
+_loadListener @ howler.min.js:2
+player.js:318 Audio play error (waiting for user interaction): Playback was unable to start. This is most commonly an issue on mobile devices and Chrome where playback was not within a user interaction.
+update time 08:37 7/9/2026
+
+ideally, when a song is clicked, all audio files play at the same time, just that the volume of the stems is multiplied by 0 so they are muted. this should make toggling stems on and off seamless, because when a stem is clicked, the main file can be muted, and the other stem can be unmuted. is that what is happening now?
+right now the bug still persists when a link to file:///C:/V/Commands/python/Versutus-main/music.html?song=p-paradice is freshly opened, but it is fixed when i play another song, then go to p paradice
+update time 08:31 7/9/2026
+
+remove the hover effect for the stem toggle buttons
+the bug also persists. stems should always be muted until the user interacts with the stem toggles for the first time in the session. if you need to speculate, instead teach me how to get information that will help you solve the problem
+update time 08:27 7/9/2026
+
+the song urls works perfectly, but the bug for "p paradice" where the main track and the stems are all playing persists. ask me for information you need to diagnose the issue and debug
+the bug only occurs when using a direct to song link to file:///C:/V/Commands/python/Versutus-main/music.html?song=p-paradice
+upon pressing play, 3 audio files play unmuted at the same time, which causes distortion and the slight delay causes phasing, which is bad
+upon pausing and playing again, only the main audio plays unmuted, but it restarts and playback becomes detached from the song progress bar
+try to fix the bug
+update time 08:21 7/9/2026
+
+the bug still persists, perhaps it would help if i specified it only occurs if the user is visiting the song directly using the link. if the song is selected normally, the bug doesn't occur. is it also possible to have the website link dynamically updated as the songs change? such that the url always reflects the currently playing song
+update time 08:13 7/9/2026
+
+the bug where all 3 audio play at the same time persist for songs with stem toggles enabled. make it such that by default only the normal version is unmuted, and only after the user first interacts with the toggles, the normal version is always muted for the rest of the session while the isolated vocals and instrumental files and muted and unmuted according to the user's toggles
+update time 08:10 7/9/2026
+
+let's optimize the stems buttons for mobile. would it be good to remove the hover effect and replace it with when mouse down / touched? right now when a mobile user taps on a stem, the hover effect persists, making it look like the stem is turned off
+update time 08:07 7/9/2026
+
 right now i think all 3 tracks (main, isolated vocals, and instrumental) are all playing together when a song is loaded. can we make sure that never happens? so it's either main audio only, or a combination of iso and inst. it makes the clipping problem quite bad
 update time 08:03 7/9/2026
 
