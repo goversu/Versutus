@@ -1,3 +1,6 @@
+right now i think all 3 tracks (main, isolated vocals, and instrumental) are all playing together when a song is loaded. can we make sure that never happens? so it's either main audio only, or a combination of iso and inst. it makes the clipping problem quite bad
+update time 08:03 7/9/2026
+
 also add the share button to the song currently playing, perhaps to the left of the volume widget
 are we able to give each song its own url on the site so that sharing shares the website instead of an audio file?
 update time 07:53 7/9/2026
