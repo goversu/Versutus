@@ -227,7 +227,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let autoPlayOnLoad = false;
         let startIndex = 0;
         if (initialSongId) {
-            autoPlayOnLoad = true;
+            // Do not auto-play deep-linked songs. Browsers block autoplay
+            // without a user gesture, and early playback creates stem tracks
+            // prematurely before the user engages the stem controls.
+            autoPlayOnLoad = false;
             const matchIndex = queue.findIndex(s => s.id === initialSongId);
             if (matchIndex !== -1) {
                 startIndex = matchIndex;
@@ -1002,6 +1005,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function startStemsIfNeeded() {
+        if (!usingStems) return;
         const song = getCurrentSong();
         const hasStems = song && song.stems && song.stems.vocals && song.stems.instrumental;
         if (!hasStems) return;
@@ -1015,7 +1019,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!stem.playing()) {
                 stem.play();
             }
-            stem.volume(usingStems ? getStemVolume(type) : 0);
+            stem.volume(getStemVolume(type));
         });
     }
 
