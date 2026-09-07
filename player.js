@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isMuted = false;
     let seekTimer = null;
     let searchQuery = '';
+    let catalogReady = false;
     let stemHowls = { vocals: null, instrumental: null };
     let usingStems = false;
     let stemMixEngaged = false; // session-level flag: once user interacts with stem controls, stays true
@@ -217,6 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Default queue: newest to oldest (sorted catalog order)
         defaultQueue = [...catalog];
         queue = [...defaultQueue];
+        catalogReady = true;
 
         renderCatalog();
         renderQueue();
@@ -239,6 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load and optionally play a track from queue
     function loadTrack(index, autoPlay = true) {
+        if (!catalogReady) return;
+
         if (index < 0 || index >= queue.length) {
             resetPlayerDisplay();
             return;
@@ -432,6 +436,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function togglePlay() {
+        if (!catalogReady) return;
+
         if (!currentHowl) {
             if (queue.length > 0) {
                 loadTrack(currentIndex >= 0 ? currentIndex : 0, true);
