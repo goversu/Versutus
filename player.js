@@ -993,20 +993,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const stem = stemHowls[type];
             if (!stem) return;
 
-            if (!usingStems) {
-                if (stem.playing()) {
-                    stem.pause();
-                }
-                stem.volume(0);
-                return;
-            }
+            const desiredStemVolume = usingStems ? getStemVolume(type) : 0;
+            stem.volume(desiredStemVolume);
 
-            stem.volume(getStemVolume(type));
+            // Keep stems playing even before the user has engaged the mix.
+            // They are muted via volume 0 so toggling on later is seamless.
         });
     }
 
     function startStemsIfNeeded() {
-        if (!usingStems) return;
+        const song = getCurrentSong();
+        const hasStems = song && song.stems && song.stems.vocals && song.stems.instrumental;
+        if (!hasStems) return;
         if (!currentHowl || !currentHowl.playing()) return;
         ensureStemsForCurrentSong();
         const pos = currentHowl.seek() || 0;
@@ -1017,7 +1015,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!stem.playing()) {
                 stem.play();
             }
-            stem.volume(getStemVolume(type));
+            stem.volume(usingStems ? getStemVolume(type) : 0);
         });
     }
 
