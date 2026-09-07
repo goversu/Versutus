@@ -951,14 +951,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentHowl) {
             currentHowl.volume(usingStems ? 0 : effVol);
         }
+
         ['vocals', 'instrumental'].forEach(type => {
-            if (stemHowls[type]) {
-                stemHowls[type].volume(getStemVolume(type));
+            const stem = stemHowls[type];
+            if (!stem) return;
+
+            if (!usingStems) {
+                if (stem.playing()) {
+                    stem.pause();
+                }
+                stem.volume(0);
+                return;
             }
+
+            stem.volume(getStemVolume(type));
         });
     }
 
     function startStemsIfNeeded() {
+        if (!usingStems) return;
         if (!currentHowl || !currentHowl.playing()) return;
         const pos = currentHowl.seek() || 0;
         ['vocals', 'instrumental'].forEach(type => {
