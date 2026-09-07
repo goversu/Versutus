@@ -1,3 +1,7 @@
+also add the share button to the song currently playing, perhaps to the left of the volume widget
+are we able to give each song its own url on the site so that sharing shares the website instead of an audio file?
+update time 07:53 7/9/2026
+
 let's try to implement a feature where the user can also share songs via a link. update time 07:47 7/9/2026
 
 the bug persists, when the song is allowed to repeat itself on repeat mode, the 2nd time it plays is silent, and i have to toggle a stem on and off to hear sound again. update time 22:58 6/9/2026
