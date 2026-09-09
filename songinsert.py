@@ -57,43 +57,48 @@ def main():
     catalog = load_catalog(CATALOG_PATH)
     print(f"Loaded {len(catalog)} songs from {CATALOG_PATH.name}")
 
-    while True:
-        add_more = prompt("Add a song? (y/n)", default="y").lower()
-        if add_more not in {"y", "yes"}:
-            break
+    print("\n--- New song ---")
+    url = prompt("URL / file path", required=True)
 
-        print("\n--- New song ---")
-        url = prompt("URL / file path", required=True)
+    song_type = prompt("Type (main / vocals / instrumental)", default="main").lower()
+    if song_type not in {"main", "vocals", "instrumental"}:
+        print(f"Unknown type '{song_type}', treating as main.")
+        song_type = "main"
 
-        song_type = prompt("Type (normal / vocals / instrumental)", default="normal").lower()
-        if song_type not in {"normal", "vocals", "instrumental"}:
-            print(f"Unknown type '{song_type}', treating as normal.")
-            song_type = "normal"
+    entry = {"url": url}
+    entry["timeAdded"] = ask_time()
 
-        entry = {"url": url}
-        entry["timeAdded"] = ask_time()
+    if song_type == "main":
+        instrumental_url = prompt("Instrumental URL", default="")
+        vocals_url = prompt("Isolated vocals (ISO) URL", default="")
+        stems = {}
+        if instrumental_url:
+            stems["instrumental"] = instrumental_url
+        if vocals_url:
+            stems["vocals"] = vocals_url
+        if stems:
+            entry["stems"] = stems
+    else:
+        full_mix_url = prompt(
+            "Full-mix URL for this song", default=url
+        )
+        other_type = "instrumental" if song_type == "vocals" else "vocals"
+        other_url = prompt(f"{other_type.capitalize()} URL", default="")
+        entry["url"] = full_mix_url
+        entry["stems"] = {}
+        if song_type == "vocals":
+            entry["stems"]["vocals"] = url
+            if other_url:
+                entry["stems"]["instrumental"] = other_url
+        else:
+            entry["stems"]["instrumental"] = url
+            if other_url:
+                entry["stems"]["vocals"] = other_url
 
-        if song_type != "normal":
-            full_mix_url = prompt(
-                "Full-mix URL for this song", default=url
-            )
-            other_type = "instrumental" if song_type == "vocals" else "vocals"
-            other_url = prompt(f"{other_type.capitalize()} URL", default="")
-            entry["url"] = full_mix_url
-            entry["stems"] = {}
-            if song_type == "vocals":
-                entry["stems"]["vocals"] = url
-                if other_url:
-                    entry["stems"]["instrumental"] = other_url
-            else:
-                entry["stems"]["instrumental"] = url
-                if other_url:
-                    entry["stems"]["vocals"] = other_url
-
-        catalog.append(entry)
-        catalog.sort(key=lambda s: parse_date(s.get("timeAdded", "")), reverse=True)
-        save_catalog(CATALOG_PATH, catalog)
-        print(f"Saved. Catalog now contains {len(catalog)} songs.")
+    catalog.append(entry)
+    catalog.sort(key=lambda s: parse_date(s.get("timeAdded", "")), reverse=True)
+    save_catalog(CATALOG_PATH, catalog)
+    print(f"Saved. Catalog now contains {len(catalog)} songs.")
     print("Done.")
 
 

@@ -390,8 +390,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Track progression logic (true order)
     function handleTrackEnd() {
         if (repeatMode === 'one') {
-            currentHowl.seek(0);
-            currentHowl.play();
+            const currentSong = getCurrentSong();
+            if (!currentSong) return;
+            // Replace the current queue item with a fresh copy so a new audio element
+            // is created when the track is loaded again. This helps mobile browsers
+            // continue looping when the site is in the background.
+            queue.splice(currentIndex, 1, { ...currentSong });
+            setTimeout(() => {
+                loadTrack(currentIndex, true);
+            }, 0);
             return;
         }
 
@@ -972,20 +979,31 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/'/g, '&#039;');
     }
 
+    function areAllStemsEnabled() {
+        return stemToggles.vocals && stemToggles.instrumental;
+    }
+
     function getEffectiveVolume() {
         return isMuted ? 0 : volume;
     }
 
     function getStemVolume(type) {
         if (!usingStems || !stemHowls[type]) return 0;
+        if (areAllStemsEnabled()) return 0;
         const shouldPlay = stemToggles[type] && !isMuted;
         return shouldPlay ? getEffectiveVolume() : 0;
     }
 
     function updateAllVolumes() {
         const effVol = getEffectiveVolume();
+        const allStemsActive = areAllStemsEnabled();
+
         if (currentHowl) {
-            currentHowl.volume(usingStems ? 0 : effVol);
+            if (usingStems && !allStemsActive) {
+                currentHowl.volume(0);
+            } else {
+                currentHowl.volume(effVol);
+            }
         }
 
         if (usingStems) {
@@ -998,9 +1016,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const desiredStemVolume = usingStems ? getStemVolume(type) : 0;
             stem.volume(desiredStemVolume);
-
-            // Keep stems playing even before the user has engaged the mix.
-            // They are muted via volume 0 so toggling on later is seamless.
         });
     }
 
