@@ -1,5 +1,8 @@
 let's update the repeat 1 song function, make it function by queueing the same song in front of itself repeatedly. this is so that on mobile, the song will keep looping when the site is in the background. if not, it will stop until the user goes back to their browser
 let's also change the stem system such that when all stems are enabled the main version is unmuted and the stems are muted. we can do away with the javascript limiter then (or keep it just to be safe)
+let's also update songinsert.py, remove asking the user if they're adding a song (if i'm calling the script, it means i am). replace the word "normal" with "main" and if the user types main, then also prompt the user for links to the instrumental and isolated vocal (iso) stems. if the user enters nothing, assume it's a main file
+also, the song i added on 2026-09-09 18:34:08 to catalog.json isn't showing up on the site. inform me of what went wrong and help me correct it
+update time 18:38 9/9/2026
 
 write code for songinsert.py that makes it convenient for me to add new songs to the catalog. it should just take in a link and ask questions to fill in the rest (include whether it's a normal song, isolated vocals, or instrumental), but set defaults for if the user enters nothing
 
