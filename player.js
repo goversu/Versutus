@@ -615,6 +615,66 @@ document.addEventListener('DOMContentLoaded', () => {
     btnNext.addEventListener('click', playNext);
     btnPrev.addEventListener('click', playPrev);
 
+    // Keyboard shortcuts (inspired by legacy Chinese music platforms)
+    function adjustVolume(delta) {
+        const newVolume = Math.min(1, Math.max(0, volume + delta));
+        volume = newVolume;
+        isMuted = volume === 0;
+
+        volumeBar.value = volume;
+        volumePercent.textContent = `${Math.round(volume * 100)}%`;
+        muteIcon.textContent = isMuted ? '🔇' : '🔊';
+
+        updateAllVolumes();
+    }
+
+    document.addEventListener('keydown', (e) => {
+        const target = e.target;
+        const tagName = target && target.tagName ? target.tagName.toLowerCase() : '';
+        const isEditable = target && (target.isContentEditable || ['input', 'textarea', 'select'].includes(tagName));
+
+        if (isEditable) return;
+
+        const isModifier = e.ctrlKey || e.metaKey;
+
+        switch (e.key) {
+            case ' ':
+            case 'Spacebar':
+                e.preventDefault();
+                togglePlay();
+                break;
+            case 'ArrowLeft':
+                if (isModifier) {
+                    e.preventDefault();
+                    playPrev();
+                }
+                break;
+            case 'ArrowRight':
+                if (isModifier) {
+                    e.preventDefault();
+                    playNext();
+                }
+                break;
+            case 'ArrowUp':
+                if (isModifier) {
+                    e.preventDefault();
+                    adjustVolume(0.1);
+                }
+                break;
+            case 'ArrowDown':
+                if (isModifier) {
+                    e.preventDefault();
+                    adjustVolume(-0.1);
+                }
+                break;
+            case 'm':
+            case 'M':
+                e.preventDefault();
+                btnMute.click();
+                break;
+        }
+    });
+
     if (btnStemVocals) {
         btnStemVocals.addEventListener('click', () => toggleStem('vocals'));
     }
