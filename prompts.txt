@@ -1,3 +1,6 @@
+let's update the repeat 1 song function, make it function by queueing the same song in front of itself repeatedly. this is so that on mobile, the song will keep looping when the site is in the background. if not, it will stop until the user goes back to their browser
+let's also change the stem system such that when all stems are enabled the main version is unmuted and the stems are muted. we can do away with the javascript limiter then (or keep it just to be safe)
+
 write code for songinsert.py that makes it convenient for me to add new songs to the catalog. it should just take in a link and ask questions to fill in the rest (include whether it's a normal song, isolated vocals, or instrumental), but set defaults for if the user enters nothing
 
 i hear all 3 audio files playing at max volume when i open file:///C:/V/Commands/python/Versutus-main/music.html?song=p-paradice
