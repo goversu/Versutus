@@ -3,141 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>versutus - music</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
-    <script src="scripts.js" defer></script>
-    <script src="player.js" defer></script>
+    <title>versutus</title>
+    <link rel="canonical" href="https://versuam.com/versutus/music">
+    <meta name="robots" content="noindex">
+    <meta http-equiv="refresh" content="0; url=https://versuam.com/versutus/music">
+    <script>
+        (function () {
+            var target = "https://versuam.com/versutus/music";
+            window.location.replace(target + window.location.search + window.location.hash);
+        })();
+    </script>
 </head>
 <body>
-<header>
-    <nav>
-        <a href="index.html" data-i18n="nav-home">versutus</a>
-        <a href="commission.html" data-i18n="nav-commission">commission</a>
-        <a href="music.html" class="active-nav" data-i18n="nav-music">music</a>
-        <select id="language-selector">
-            <option value="en">english</option>
-            <option value="zh-Hans">简体中文</option>
-            <option value="zh-Hant">繁體中文</option>
-        </select>
-    </nav>
-</header>
-
-<div class="container">
-    <section class="music-section">
-        <!-- Main Player Card -->
-        <div class="player-card">
-            <div class="player-track-info">
-                <div class="track-visual-disc" id="player-disc">
-                    <span class="disc-hole"></span>
-                </div>
-                <div class="track-details">
-                    <div class="track-title" id="player-title" data-i18n="no-song-playing">no track playing</div>
-                    <div class="track-artist" id="player-artist">versutus</div>
-                </div>
-            </div>
-
-            <!-- Scrubber / Timeline -->
-            <div class="player-timeline">
-                <span id="current-time">0:00</span>
-                <input type="range" id="seek-bar" min="0" max="100" value="0" step="0.1" aria-label="Seek time">
-                <span id="total-duration">0:00</span>
-            </div>
-
-            <!-- Main Controls -->
-            <div class="player-controls">
-                <button id="btn-shuffle" class="control-btn" title="Shuffle" aria-label="Shuffle">
-                    <span class="btn-icon">🔀</span>
-                </button>
-
-                <button id="btn-prev" class="control-btn" title="Previous" aria-label="Previous track">
-                    <span class="btn-icon">⏮</span>
-                </button>
-
-                <button id="btn-play" class="control-btn play-main-btn" title="Play / Pause" aria-label="Play or Pause">
-                    <span class="btn-icon" id="play-icon">▶</span>
-                </button>
-
-                <button id="btn-next" class="control-btn" title="Next" aria-label="Next track">
-                    <span class="btn-icon">⏭</span>
-                </button>
-
-                <button id="btn-repeat" class="control-btn" title="Repeat (off)" aria-label="Repeat mode">
-                    <span class="btn-icon" id="repeat-icon">🔁</span>
-                    <span class="repeat-mode-badge" id="repeat-badge"></span>
-                </button>
-            </div>
-
-            <!-- Volume Bar (Default 100%) -->
-            <div class="player-volume">
-                <button id="btn-share-current" class="volume-btn" title="Share song" aria-label="Share current song">
-                    <span id="share-current-icon">🔗</span>
-                </button>
-                <button id="btn-mute" class="volume-btn" title="Mute" aria-label="Mute or unmute">
-                    <span id="mute-icon">🔊</span>
-                </button>
-                <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1.0" aria-label="Volume">
-                <span id="volume-percent">100%</span>
-            </div>
-
-            <!-- Stem Toggle Controls (hidden by default) -->
-            <div class="stem-controls" id="stem-controls" style="display: none;">
-                <span class="stem-label" data-i18n="stems">stems</span>
-                <button id="btn-stem-vocals" class="stem-btn active" title="Toggle vocals" data-i18n="stem-vocals">vocals</button>
-                <button id="btn-stem-instrumental" class="stem-btn active" title="Toggle instrumental" data-i18n="stem-instrumental">instrumental</button>
-            </div>
-        </div>
-
-        <!-- Queue Section (Collapsible by default) -->
-        <div class="playlist-container queue-container">
-            <div class="section-subhead clickable-header" id="queue-toggle-header">
-                <div class="title-with-badge">
-                    <h3 data-i18n="queue-title">queue</h3>
-                    <span id="queue-count" class="badge-count">(0)</span>
-                    <span id="queue-toggle-arrow" class="toggle-arrow">▼</span>
-                </div>
-                <div class="queue-actions">
-                    <button id="btn-clear-queue" class="mini-btn" data-i18n="queue-clear" onclick="event.stopPropagation()">clear</button>
-                </div>
-            </div>
-            <div id="queue-collapsible" class="queue-collapsible collapsed">
-                <div id="queue-list" class="queue-list">
-                    <!-- Dynamically rendered queue items -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Catalog / All Songs Section with Search -->
-        <div class="playlist-container catalog-container">
-            <div class="section-subhead">
-                <div class="title-with-badge">
-                    <h3 data-i18n="catalog-title">all songs</h3>
-                    <span id="catalog-count" class="badge-count">(0)</span>
-                </div>
-                <button id="btn-queue-all" class="mini-btn" data-i18n="queue-add-all">queue all</button>
-            </div>
-
-            <!-- Search input -->
-            <div class="search-bar-wrap">
-                <input type="text" id="search-songs" class="search-input" data-i18n="search-placeholder" placeholder="search songs..." autocomplete="off">
-                <button id="search-clear-btn" class="search-clear-btn" style="display: none;" title="Clear search">✕</button>
-            </div>
-
-            <div id="catalog-list" class="catalog-list">
-                <!-- Dynamically rendered catalog items -->
-            </div>
-        </div>
-    </section>
-</div>
-
-<footer>
-    <div class="profile-links">
-        <a href="https://www.youtube.com/Versutus" target="_blank">youtube</a>
-        <a href="https://music.apple.com/us/artist/versutus/1494564528" target="_blank">apple music</a>
-        <a href="https://open.spotify.com/artist/4TxIpp0lzeQxsZqFjlKDZQ" target="_blank">spotify</a>
-        <button id="email-button" class="email-button">versutus0@gmail.com</button>
-    </div>
-</footer>
-
+    <p>This site has moved to <a href="https://versuam.com/versutus/music">https://versuam.com/versutus/music</a>.</p>
 </body>
 </html>
